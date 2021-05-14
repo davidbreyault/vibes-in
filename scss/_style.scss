@@ -1,0 +1,285 @@
+/* montserrat-200 - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 200;
+    src: local(''),
+            url('../fonts/montserrat-v15-latin-200.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('../fonts/montserrat-v15-latin-200.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* montserrat-regular - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    src: local(''),
+            url('../fonts/montserrat-v15-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('../fonts/montserrat-v15-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* montserrat-600 - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    src: local(''),
+            url('../fonts/montserrat-v15-latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('../fonts/montserrat-v15-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* montserrat-700 - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    src: local(''),
+            url('../fonts/montserrat-v15-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('../fonts/montserrat-v15-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+  
+body {
+    background-color: $primary;
+    color: $text-primary;
+    line-height: 1.5;
+	font-size: 1.6rem;
+    font-family: Montserrat, sans-serif;
+}
+
+label, input, select {
+    display: block;
+}
+
+input {
+    width: 100%;
+    border: none;
+    border-radius: .4rem;
+    padding: 1rem;
+    background-color: #3b4050;
+    color: $text-primary;
+}
+
+button {
+    color: currentColor;
+}
+
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+	@include lg {
+		max-width: calc(62em - 3rem);
+	}
+	@include xl {
+		max-width: calc(75em - 3rem);
+	}
+	@include xxl {
+		max-width: calc(87.5em - 3rem);
+	}
+}
+
+.header {
+    .container {
+        @include flex-layout;
+    }
+    .logo {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+}
+
+.hero {
+    background-color: $primary-lighter-1;
+    height: 250px;
+}
+
+.search {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    .form {
+        display: grid;
+        grid-template-columns: 100%;
+        row-gap: 1rem;
+    }
+    @include sm {
+        .form {
+            grid-template-columns: 55% 25% 1fr;
+            column-gap: 1%;
+        }
+    }
+    @include md {
+        .form {
+            grid-template-columns: 60% 30% 1fr;
+            column-gap: 1%;
+        }
+    }
+
+    label[for="search-input"] {
+        position: relative;
+    }
+
+    .search-span {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        display: block;
+        transform: translateY(-50%);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .search-span.translate {
+        position: absolute;
+        left: 0;
+        display: block;
+        transform: translateY(-4.5rem);
+        transition: all 0.3s ease-in-out;
+        font-size: 1.2rem;
+    }
+
+    .dropdown {
+        position: relative;
+        &__select {
+            @include flex-layout(row, space-between, center);
+            padding: 1rem;
+            border-radius: .4rem;
+            background-color: $primary-lighter-1;
+            cursor: pointer;
+            img {
+                transition: all 0.3s ease-in-out;
+            }
+        }
+        &__list {
+            position: absolute;
+            top: 120%;
+            left: 0;
+            right: 0;
+            border-radius: .4rem;
+            background-color: $primary-lighter-1;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            &--hidden {
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease-in-out;
+            }
+            &--item {
+                padding: 1rem;
+                text-align: left;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+                &:hover {
+                    background-color: $primary-lighter-2;
+                    transition: all 0.2s ease-in-out; 
+                }
+            }
+        }
+    }
+
+    input[type="submit"] {
+        transition: all 0.2s ease-in-out;
+        &:hover {
+            background-color: $primary-lighter-2;
+            transition: all 0.2s ease-in-out;
+        }
+    }
+
+    .rotate {
+        transform: rotate(180deg);
+        transition: all 0.3s ease-in-out;
+    }
+}
+
+// #########################################################################################
+// #########################################################################################
+// #########################################################################################
+.results-list {
+    width: 100%;
+    font-size: 1.2rem;
+    @include sm {
+        font-size: 1.4rem;
+    }
+    @include md {
+        font-size: 1.6rem;
+    }
+    li {
+        display: grid;
+        grid-template-columns: max-content 1fr max-content;
+        grid-template-rows: repeat(3, 1fr);
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid $primary-darker-1;
+    }
+    li:nth-of-type(2n+1) {
+        background-color: $primary-darker-1;
+    }
+    .header {
+        display: none;
+    }
+    @include md {
+        .header {
+            display: grid;
+        }
+    }
+    .counter {
+        grid-template-rows: 1fr;
+        p {
+            grid-column: 1 / -1;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+    }
+    &__item--id {
+        grid-column: 1 / 2;
+        grid-row: 1 / -1;
+        padding-right: 1rem;
+        margin-right: 1rem;
+        border-right: solid $text-primary .05rem;
+        text-align: center;
+    }
+    &__item--more {
+        @include flex-layout(row, center, center);
+        grid-column: 3 / 4;
+        grid-row: 1 / -1;
+        width: 3rem;
+        height: 3rem;
+        padding: 0;
+        border-radius: 50%;
+        border: 1px solid $text-primary;
+        background-color: transparent;
+        opacity: .5;
+        &:hover {
+            opacity: 1;
+            img {
+                transform: rotate(180deg);
+                transition: transform 0.3s ease-in-out;
+            }
+        }
+        img {
+            display: block;
+            width: 15px;
+            height: 15px;
+            transform: rotate(0);
+            transition: transform 0.3s ease-in-out;
+        }
+    }
+    @include md {
+        li {
+            grid-template-columns: 5rem repeat(3, 1fr) max-content;
+            grid-template-rows: 1fr;
+        }
+        &__item--id {
+            margin-right: 0;
+            border-right: none;
+            text-align: left;
+        }
+    
+        &__item--more {
+            grid-column: 6 / 7;
+        }
+    }
+}
+
+
+

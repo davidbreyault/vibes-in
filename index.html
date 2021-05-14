@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>VibesIn</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">VibesIn</div>
+            <p>v-1.0</p>
+        </div>
+    </header>
+    <section class="hero">
+        <div class="container"></div>
+    </section>
+    <section class="search">
+        <div class="container">
+            <form class="form">
+                <div class="form__group">
+                    <label for="search-input">
+                        <span class="search-span">Let's play something ?</span>
+                        <input type="text" name="search-input" id="search-input" required>
+                    </label>
+                </div>
+                <div class="dropdown form__group">
+                    <div class="dropdown__select">
+                        <span class="select">-- Select --</span>
+                        <img src="img/logo_chevron_down.svg" alt="chevron-down-solid-icon">
+                    </div>
+                    <ul class="dropdown__list dropdown__list--hidden">
+                        <li class="dropdown__list--item" data-value="all">All</li>
+                        <li class="dropdown__list--item" data-value="artist">Artists</li>
+                        <li class="dropdown__list--item" data-value="title">Titles</li>
+                        <li class="dropdown__list--item" data-value="album">Albums</li>
+                    </ul>
+                </div>
+                <div class="form__group">
+                    <input type="submit" name="submit-input" id="submit-input" value="Search">
+                </div>
+            </form>
+        </div>
+    </section>
+    <section class="results">
+        <div class="container">
+            <ul class="results-list">
+                <li class="header">
+                    <p class="header__id">#</p>
+                    <p class="header__artist">Artist</p>
+                    <p class="header__title">Title</p>
+                    <p class="header__album">Album</p>
+                    <p class="header__more">More</p>
+                </li>
+                <li class="counter">
+                    <p>Please enter something to search</p>
+                </li>
+                <!-- <li class="results-list__item">
+                    <p class="results-list__item--id">1</p>
+                    <p class="results-list__item--artist">Daft Punk</p>
+                    <p class="results-list__item--title">Harder Better Faster Stronger</p>
+                    <p class="results-list__item--album">Alive 2007</p>
+                    <button class="results-list__item--more">
+                        <img src="img/logo_plus.svg" alt="logo_plus">
+                    </button>
+                </li> -->
+            </ul>
+        </div>
+    </section>
+    <script src="js/app.js"></script>
+</body>
+</html>
