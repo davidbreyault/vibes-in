@@ -23,7 +23,7 @@
                 <div class="form__group">
                     <label for="search-input">
                         <span class="search-span">Let's play something ?</span>
-                        <input type="text" name="search-input" id="search-input" required>
+                        <input type="text" name="search-input" id="search-input" autocomplete="off">
                     </label>
                 </div>
                 <div class="dropdown form__group">
@@ -34,29 +34,31 @@
                     <ul class="dropdown__list dropdown__list--hidden">
                         <li class="dropdown__list--item" data-value="all">All</li>
                         <li class="dropdown__list--item" data-value="artist">Artists</li>
-                        <li class="dropdown__list--item" data-value="title">Titles</li>
-                        <li class="dropdown__list--item" data-value="album">Albums</li>
+                        <li class="dropdown__list--item" data-value="recording">Titles</li>
+                        <li class="dropdown__list--item" data-value="release">Albums</li>
                     </ul>
                 </div>
                 <div class="form__group">
                     <input type="submit" name="submit-input" id="submit-input" value="Search">
                 </div>
             </form>
+            <p class="error-info"></p>
         </div>
     </section>
     <section class="results">
         <div class="container">
-            <ul class="results-list">
-                <li class="header">
+            <div class="results-header">
+                <p class="results-header__counter"></p>
+                <div class="results-header__row">
                     <p class="header__id">#</p>
                     <p class="header__artist">Artist</p>
                     <p class="header__title">Title</p>
                     <p class="header__album">Album</p>
                     <p class="header__more">More</p>
-                </li>
-                <li class="counter">
-                    <p>Please enter something to search</p>
-                </li>
+                </div>
+                <p class="results-header__info">Waiting for your request sir !</p>
+            </div>
+            <ul class="results-list">
                 <!-- <li class="results-list__item">
                     <p class="results-list__item--id">1</p>
                     <p class="results-list__item--artist">Daft Punk</p>
@@ -67,8 +69,13 @@
                     </button>
                 </li> -->
             </ul>
+            <button id="btn-scroll-top">
+                <p>UP</p>
+                <span class="screen-reader-text">Back to top</span>
+            </button>
         </div>
     </section>
     <script src="js/app.js"></script>
+    <script src="js/scroll-top.js"></script>
 </body>
 </html>

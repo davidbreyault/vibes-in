@@ -111,6 +111,12 @@ button {
     }
     @include md {
         .form {
+            grid-template-columns: 55% 30% 1fr;
+            column-gap: 1%;
+        }
+    }
+    @include lg {
+        .form {
             grid-template-columns: 60% 30% 1fr;
             column-gap: 1%;
         }
@@ -152,6 +158,7 @@ button {
         }
         &__list {
             position: absolute;
+            z-index: 3;
             top: 120%;
             left: 0;
             right: 0;
@@ -184,59 +191,128 @@ button {
             transition: all 0.2s ease-in-out;
         }
     }
-
     .rotate {
         transform: rotate(180deg);
         transition: all 0.3s ease-in-out;
+    }
+    .error-info {
+        margin-top: 1rem;
+        color: $text-error;
+        font-size: 1.4rem;
     }
 }
 
 // #########################################################################################
 // #########################################################################################
 // #########################################################################################
-.results-list {
-    width: 100%;
-    font-size: 1.2rem;
-    @include sm {
-        font-size: 1.4rem;
+.results {
+    p {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        font-size: 1.2rem;
+        @include lg {
+            font-size: 1.4rem;
+        }
+        @include xxl {
+            font-size: 1.6rem;
+        }
     }
-    @include md {
-        font-size: 1.6rem;
+}
+
+.results-header {
+    &__row {
+        display: none;
+        @include md {
+            display: grid;
+            grid-template-columns: 5rem 1fr 1.5fr 1.5fr 6rem;
+            grid-template-rows: 1fr;
+            align-items: center;
+            padding: 1rem;
+            background-color: $primary-darker-1;
+        }
+    }
+    &__counter {
+        display: none;
+        padding-left: 1.5rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    &__info {
+        text-align: center;
+        @include md {
+            padding-top: 2rem;
+        }
+    }
+}
+
+#btn-scroll-top {
+    @include flex-layout(row, center, center);
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    display: none;
+    width: 4rem;
+    height: 4rem;
+    padding: 0;
+    border: none;
+    border-radius: .4rem;
+    background-color: $text-primary;
+    transition: all .2s ease-in-out;
+    p {
+        color: $primary-darker-1;
+    }
+    &:hover {
+        background-color: darken($text-primary, 20%);
+    }
+}
+
+.results-list {
+    p {
+        color: darken($text-primary, 20%);
     }
     li {
         display: grid;
-        grid-template-columns: max-content 1fr max-content;
+        grid-template-columns: 4rem 1fr max-content;
         grid-template-rows: repeat(3, 1fr);
         align-items: center;
         padding: 1rem;
         border-bottom: 1px solid $primary-darker-1;
+        @include md {
+            grid-template-columns: 5rem 1fr 1.5fr 1.5fr 6rem;
+            grid-template-rows: 1fr;
+        }
     }
-    li:nth-of-type(2n+1) {
+    li:nth-of-type(2n+2) {
         background-color: $primary-darker-1;
-    }
-    .header {
-        display: none;
-    }
-    @include md {
-        .header {
-            display: grid;
-        }
-    }
-    .counter {
-        grid-template-rows: 1fr;
-        p {
-            grid-column: 1 / -1;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-        }
     }
     &__item--id {
         grid-column: 1 / 2;
         grid-row: 1 / -1;
-        padding-right: 1rem;
-        margin-right: 1rem;
-        border-right: solid $text-primary .05rem;
+        border-right: .1rem solid $primary-lighter-2;
         text-align: center;
+        @include md {
+            margin-right: 0;
+            border-right: none;
+            text-align: left;
+        }
+    }
+    &__item--artist {
+        margin-left: 2rem;
+        @include md {
+            margin-left: 0;
+        }
+    }
+    &__item--title {
+        margin-left: 2rem;
+        @include md {
+            margin-left: 0;
+        }
+    }
+    &__item--album {
+        margin-left: 2rem;
+        @include md {
+            margin-left: 0;
+        }
     }
     &__item--more {
         @include flex-layout(row, center, center);
@@ -263,20 +339,9 @@ button {
             transform: rotate(0);
             transition: transform 0.3s ease-in-out;
         }
-    }
-    @include md {
-        li {
-            grid-template-columns: 5rem repeat(3, 1fr) max-content;
-            grid-template-rows: 1fr;
-        }
-        &__item--id {
-            margin-right: 0;
-            border-right: none;
-            text-align: left;
-        }
-    
-        &__item--more {
-            grid-column: 6 / 7;
+        @include md {
+            grid-column: 5 / 6;
+            justify-self: center;
         }
     }
 }
