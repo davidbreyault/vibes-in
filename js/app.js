@@ -56,11 +56,21 @@ dropdownListItems.forEach((item) => {
 function createList(id, artist, title, album, mbid) {
     // Création des éléments
     let newId = document.createElement('p');
+    // Artiste
     let newArtist= document.createElement('p');
+    let newArtistImg = document.createElement('img');
+    let newArtistSpan = document.createElement('span');
+    // Titre
     let newTitle = document.createElement('p');
+    let newTitleImg = document.createElement('img');
+    let newTitleSpan = document.createElement('span');
+    // Album
     let newAlbum = document.createElement('p');
+    let newAlbumImg = document.createElement('img');
+    let newAlbumSpan = document.createElement('span');
+    // Boutton
     let newButton = document.createElement('button');
-    let newImg = document.createElement('img');
+    let newImgButton = document.createElement('img');
     let newLine = document.createElement('li');
     let newMbid = mbid;
     // Distribution des classes
@@ -70,16 +80,29 @@ function createList(id, artist, title, album, mbid) {
     newAlbum.classList.add('results-list__item--album');
     newButton.classList.add('results-list__item--more');
     newLine.classList.add('results-list__item');
-    // Attributs du logo
-    newImg.src = 'img/logo_plus.svg';
-    newImg.alt = 'logo_plus';
+    // Attributs des logos
+    newArtistImg.src = 'img/artist.svg';
+    newArtistImg.alt = 'logo_artist';
+    newTitleImg.src = 'img/music-note.svg';
+    newTitleImg.alt = 'logo_title';
+    newAlbumImg.src = 'img/disc.svg';
+    newAlbumImg.alt = 'logo_album';
+    newImgButton.src = 'img/logo_plus.svg';
+    newImgButton.alt = 'logo_plus';
     // Contenu textuel des éléments
     newId.textContent = id;
-    newArtist.textContent = artist;
-    newTitle.textContent = title;
-    newAlbum.textContent = album;
-    // Ajout de l'image
-    newButton.appendChild(newImg);
+    newArtistSpan.textContent = artist;
+    newTitleSpan.textContent = title;
+    newAlbumSpan.textContent = album;
+    // Ajout images et span
+    newArtist.appendChild(newArtistImg);
+    newArtist.appendChild(newArtistSpan);
+    newTitle.appendChild(newTitleImg);
+    newTitle.appendChild(newTitleSpan);
+    newAlbum.appendChild(newAlbumImg);
+    newAlbum.appendChild(newAlbumSpan);
+    // Boutton
+    newButton.appendChild(newImgButton);
     // Nouvelle requête lors du clique sur le bouton
     newButton.addEventListener('click', () => {
         console.log(id + ' mbid :  ' + newMbid);
@@ -118,8 +141,8 @@ formElt.addEventListener('submit', (e) => {
             } else {
                 searchRequest(parameter, encodeURIComponent(inputValue));
             }
-            console.log(encodeURIComponent(inputValue));
-            console.log(inputValue);
+            //console.log(encodeURIComponent(inputValue));
+            //console.log(inputValue);
         } else {
             errorInfoElt.textContent = 'Please select your type of search.';
         }
@@ -132,8 +155,13 @@ function searchRequest(parameter, value) {
     let request = new XMLHttpRequest();
     request.addEventListener('readystatechange', () => {
         // Si l'opération de récupération est terminée
-        if (request.readyState === XMLHttpRequest.DONE) {
+        console.log(request.readyState);
+        if (request.readyState !== XMLHttpRequest.DONE) {
+            console.log('LOADER');
+        }
+        else if (request.readyState === XMLHttpRequest.DONE) {
             // Si la requête a été effectué avec succès
+            
             if (request.status === 200) {
                 // Conversion des données JSON en données interprétables par le Javascript
                 let response = JSON.parse(request.response);
@@ -216,6 +244,7 @@ function lookupRequest(mbid) {
 function lookupRequestTest(parameter, mbid) {
     let request = new XMLHttpRequest();
     request.addEventListener('readystatechange', () => {
+        //console.log(request.readyState); 
         if (request.readyState === XMLHttpRequest.DONE) {
             if (request.status === 200) {
                 // Conversion des données JSON en données interprétables par le Javascript
@@ -226,10 +255,8 @@ function lookupRequestTest(parameter, mbid) {
             }
         }
     })
-    request.open('GET', `https://musicbrainz.org/ws/2/${parameter}/${mbid}?inc=artists+releases+discids+ratings&fmt=json`);
+    request.open('GET', `https://musicbrainz.org/ws/2/${parameter}/${mbid}?inc=artists+releases&fmt=json`);
     request.send(); 
 }
 
-//lookupRequestTest('recording', '27af3d46-6f52-456d-96cb-b18ad379a939');
-
-
+//lookupRequestTest('recording', '34d2d331-d96b-4008-b8b2-d194c9cbf810');

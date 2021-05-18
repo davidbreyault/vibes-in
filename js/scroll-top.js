@@ -1,7 +1,7 @@
 const btnScrollToTop = document.querySelector('#btn-scroll-top');
 
 window.addEventListener('scroll', () => {
-    btnScrollToTop.style.display = window.pageYOffset >= 400 ? 'block' : 'none';
+    btnScrollToTop.style.display = window.pageYOffset >= 400 ? 'flex' : 'none';
 })
 
 btnScrollToTop.addEventListener('click', (e) => {
