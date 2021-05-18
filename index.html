@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="glide/css/glide.core.css">
+
     <title>VibesIn</title>
 </head>
 <body>
@@ -15,8 +17,22 @@
         </div>
     </header>
     <section class="hero">
-        <div class="container"></div>
-    </section>
+        <div class="container">
+            <div class="glide">
+                <div class="glide__track" data-glide-el="track">
+                    <ul class="glide__slides">
+                        <li class="glide__slide">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, deleniti. Pariatur voluptatum placeat fuga atque eum, dolor voluptates quos unde exercitationem minus tenetur dignissimos eos veniam quibusdam. Quidem, quod doloremque.</li>
+                        <li class="glide__slide">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, deleniti. Pariatur voluptatum placeat fuga atque eum, dolor voluptates quos unde exercitationem minus tenetur dignissimos eos veniam quibusdam. Quidem, quod doloremque.</li>
+                        <li class="glide__slide">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, deleniti. Pariatur voluptatum placeat fuga atque eum, dolor voluptates quos unde exercitationem minus tenetur dignissimos eos veniam quibusdam. Quidem, quod doloremque.</li>
+                    </ul>
+                </div>
+                <div class="glide__arrows" data-glide-el="controls">
+                    <button class="glide__arrow glide__arrow--left" data-glide-dir="<">prev</button>
+                    <button class="glide__arrow glide__arrow--right" data-glide-dir=">">next</button>
+                </div> 
+            </div> 
+        </div>   
+    </section>   
     <section class="search">
         <div class="container">
             <form class="form">
@@ -29,7 +45,7 @@
                 <div class="dropdown form__group">
                     <div class="dropdown__select">
                         <span class="select">-- Select --</span>
-                        <img src="img/logo_chevron_down.svg" alt="chevron-down-solid-icon">
+                        <img src="img/logo_chevron_down.svg" alt="chevron-down-icon">
                     </div>
                     <ul class="dropdown__list dropdown__list--hidden">
                         <li class="dropdown__list--item" data-value="all">All</li>
@@ -61,21 +77,36 @@
             <ul class="results-list">
                 <!-- <li class="results-list__item">
                     <p class="results-list__item--id">1</p>
-                    <p class="results-list__item--artist">Daft Punk</p>
-                    <p class="results-list__item--title">Harder Better Faster Stronger</p>
-                    <p class="results-list__item--album">Alive 2007</p>
+                    <p class="results-list__item--artist">
+                        <img src="img/artist.svg" alt="">
+                        <span>Daft Punk</span>
+                    </p>
+                    <p class="results-list__item--title">
+                        <img src="img/music-note.svg" alt="">
+                        <span>Harder Better Faster Stronger</span>
+                    </p>
+                    <p class="results-list__item--album">
+                        <img src="img/disc.svg" alt="">
+                        <span>Alive 2007</span>
+                    </p>
                     <button class="results-list__item--more">
                         <img src="img/logo_plus.svg" alt="logo_plus">
                     </button>
                 </li> -->
             </ul>
             <button id="btn-scroll-top">
-                <p>UP</p>
+                <img src="img/logo_chevron_up.svg" alt="chevron-up-icon">
                 <span class="screen-reader-text">Back to top</span>
             </button>
         </div>
     </section>
+    <script src="glide/glide.js"></script>
     <script src="js/app.js"></script>
     <script src="js/scroll-top.js"></script>
+    <script>
+        new Glide('.glide', {
+            type: 'carousel'
+        }).mount();
+    </script>
 </body>
 </html>
