@@ -207,8 +207,6 @@ button {
 // #########################################################################################
 .results {
     p {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
         font-size: 1.2rem;
         @include lg {
             font-size: 1.4rem;
@@ -216,6 +214,10 @@ button {
         @include xxl {
             font-size: 1.6rem;
         }
+    }
+    p:not(.results-list__item--id) {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
     }
 }
 
@@ -243,6 +245,9 @@ button {
             padding-top: 2rem;
         }
     }
+    .header__more {
+        justify-self: center;
+    }
 }
 
 #btn-scroll-top {
@@ -255,7 +260,7 @@ button {
     height: 4rem;
     padding: 0;
     border: none;
-    border-radius: .4rem;
+    border-radius: 2em;
     background-color: $text-primary;
     transition: all .2s ease-in-out;
     p {
@@ -269,49 +274,72 @@ button {
 .results-list {
     p {
         color: darken($text-primary, 20%);
+        img {
+            margin-right: 1rem;
+            opacity: .7;
+        }
+        @include md {
+            img {
+                display: none;
+            }
+        }
     }
     li {
         display: grid;
-        grid-template-columns: 4rem 1fr max-content;
+        grid-template-columns: max-content 1fr max-content;
         grid-template-rows: repeat(3, 1fr);
         align-items: center;
-        padding: 1rem;
+        padding: 1rem 0;
         border-bottom: 1px solid $primary-darker-1;
+        &:nth-of-type(2n+2) {
+            background-color: $primary-darker-1;
+        }
         @include md {
             grid-template-columns: 5rem 1fr 1.5fr 1.5fr 6rem;
             grid-template-rows: 1fr;
+            padding: 1rem;
         }
-    }
-    li:nth-of-type(2n+2) {
-        background-color: $primary-darker-1;
     }
     &__item--id {
         grid-column: 1 / 2;
         grid-row: 1 / -1;
+        padding-left: 1rem;
+        padding-right: 1rem;
         border-right: .1rem solid $primary-lighter-2;
         text-align: center;
         @include md {
             margin-right: 0;
+            padding-left: 0.5rem;
+            padding-right: 0;
             border-right: none;
             text-align: left;
         }
     }
     &__item--artist {
-        margin-left: 2rem;
+        @include flex-layout(row, flex-start, center);
+        margin-left: 1rem;
+        margin-bottom: 0.8rem;
         @include md {
             margin-left: 0;
+            margin-bottom: 0;
         }
     }
     &__item--title {
-        margin-left: 2rem;
+        @include flex-layout(row, flex-start, center);
+        margin-left: 1rem;
+        margin-bottom: 0.8rem;
         @include md {
             margin-left: 0;
+            margin-bottom: 0;
         }
     }
     &__item--album {
-        margin-left: 2rem;
+        @include flex-layout(row, flex-start, center);
+        margin-left: 1rem;
+        margin-bottom: 0.8rem;
         @include md {
             margin-left: 0;
+            margin-bottom: 0;
         }
     }
     &__item--more {
@@ -320,6 +348,7 @@ button {
         grid-row: 1 / -1;
         width: 3rem;
         height: 3rem;
+        margin-right: 1rem;
         padding: 0;
         border-radius: 50%;
         border: 1px solid $text-primary;
@@ -342,9 +371,7 @@ button {
         @include md {
             grid-column: 5 / 6;
             justify-self: center;
+            margin-right: 0;
         }
     }
 }
-
-
-
