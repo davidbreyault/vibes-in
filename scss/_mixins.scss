@@ -1,3 +1,9 @@
+@mixin xs {
+    @media screen and (min-width: $xs) {
+        @content;
+    }
+}
+
 @mixin sm {
     @media screen and (min-width: $sm) {
         @content;

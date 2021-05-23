@@ -50,17 +50,17 @@ label, input, select {
     display: block;
 }
 
+button {
+    color: currentColor;
+}
+
 input {
     width: 100%;
     border: none;
     border-radius: .4rem;
     padding: 1rem;
-    background-color: #3b4050;
+    background-color: $primary-lighter-1;
     color: $text-primary;
-}
-
-button {
-    color: currentColor;
 }
 
 .container {
@@ -91,8 +91,23 @@ button {
 }
 
 .hero {
-    background-color: $primary-lighter-1;
-    height: 250px;
+    background-color: $primary-darker-1;
+    min-height: calc(100vh - 4.4rem);
+}
+
+.glide {
+    position: relative;
+}
+
+.glide__slide {
+    min-height: calc(100vh - 4.4rem);
+    border: 1px red solid;
+}
+
+.glide__arrows {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .search {
@@ -121,11 +136,9 @@ button {
             column-gap: 1%;
         }
     }
-
     label[for="search-input"] {
         position: relative;
     }
-
     .search-span {
         position: absolute;
         top: 50%;
@@ -134,7 +147,6 @@ button {
         transform: translateY(-50%);
         transition: all 0.3s ease-in-out;
     }
-
     .search-span.translate {
         position: absolute;
         left: 0;
@@ -143,7 +155,6 @@ button {
         transition: all 0.3s ease-in-out;
         font-size: 1.2rem;
     }
-
     .dropdown {
         position: relative;
         &__select {
@@ -183,12 +194,31 @@ button {
             }
         }
     }
-
-    input[type="submit"] {
-        transition: all 0.2s ease-in-out;
+    button[type="submit"] {
+        position: relative;
+        width: 100%;
+        padding: 1rem;
+        border-radius: .4rem;
+        border: 0.1rem solid $primary-lighter-2;
+        background-color: transparent;
+        overflow: hidden;
+        transition: all 0.3s ease-in-out;
+        &::after {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: $primary-lighter-1;
+            transition: all 0.3s ease-in-out;
+        }
         &:hover {
-            background-color: $primary-lighter-2;
-            transition: all 0.2s ease-in-out;
+            transition: all 0.3s ease-in-out;
+            &::after {
+                width: 100%;
+            }
         }
     }
     .rotate {
@@ -206,6 +236,7 @@ button {
 // #########################################################################################
 // #########################################################################################
 .results {
+    min-height: calc(100vh - 26.4rem);
     p {
         font-size: 1.2rem;
         @include lg {
@@ -245,6 +276,9 @@ button {
             padding-top: 2rem;
         }
     }
+    .header__id {
+        font-weight: 600;
+    }
     .header__more {
         justify-self: center;
     }
@@ -263,9 +297,6 @@ button {
     border-radius: 2em;
     background-color: $text-primary;
     transition: all .2s ease-in-out;
-    p {
-        color: $primary-darker-1;
-    }
     &:hover {
         background-color: darken($text-primary, 20%);
     }
@@ -274,25 +305,32 @@ button {
 .results-list {
     p {
         color: darken($text-primary, 20%);
+    }
+    img {
+        margin-right: 1rem;
+        opacity: .7;
+    }
+    @include md {
         img {
-            margin-right: 1rem;
-            opacity: .7;
-        }
-        @include md {
-            img {
-                display: none;
-            }
+            display: none;
         }
     }
     li {
         display: grid;
-        grid-template-columns: max-content 1fr max-content;
-        grid-template-rows: repeat(3, 1fr);
+        grid-template-columns: 1fr max-content;
+        grid-template-rows: repeat(4, 1fr);
         align-items: center;
         padding: 1rem 0;
         border-bottom: 1px solid $primary-darker-1;
         &:nth-of-type(2n+2) {
             background-color: $primary-darker-1;
+        }
+        @include sm {
+            grid-template-columns: max-content 1fr max-content;
+            grid-template-rows: repeat(3, 1fr);
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid $primary-darker-1;
         }
         @include md {
             grid-template-columns: 5rem 1fr 1.5fr 1.5fr 6rem;
@@ -301,14 +339,28 @@ button {
         }
     }
     &__item--id {
+        @include flex-layout(row, flex-start, center);
         grid-column: 1 / 2;
-        grid-row: 1 / -1;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        border-right: .1rem solid $primary-lighter-2;
-        text-align: center;
+        grid-row: 1 / 2;
+        margin-left: 1rem;
+        margin-bottom: 0.8rem;
+        padding-left: 0.5rem;
+        font-weight: 600;
+        @include sm {
+            grid-column: 1 / 2;
+            grid-row: 1 / -1;
+            margin: 0;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            border-right: 0.1rem solid $primary-lighter-2;
+            text-align: center;
+            img {
+                margin-right: 0.3rem;
+            }
+        }
         @include md {
-            margin-right: 0;
+            grid-column: 1 / 2;
+            grid-row: 1 / -1;
             padding-left: 0.5rem;
             padding-right: 0;
             border-right: none;
@@ -317,27 +369,57 @@ button {
     }
     &__item--artist {
         @include flex-layout(row, flex-start, center);
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
         margin-left: 1rem;
         margin-bottom: 0.8rem;
+        @include sm {
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+            margin-left: 1rem;
+            margin-bottom: 0.8rem;
+        }
         @include md {
+            grid-column: 2 / 3;
+            grid-row: 1 / -1;
             margin-left: 0;
             margin-bottom: 0;
         }
     }
     &__item--title {
         @include flex-layout(row, flex-start, center);
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
         margin-left: 1rem;
         margin-bottom: 0.8rem;
+        @include sm {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+            margin-left: 1rem;
+            margin-bottom: 0.8rem;
+        }
         @include md {
+            grid-column: 3 / 4;
+            grid-row: 1 / -1;
             margin-left: 0;
             margin-bottom: 0;
         }
     }
     &__item--album {
         @include flex-layout(row, flex-start, center);
+        grid-column: 1 / 2;
+        grid-row: 4 / 5;
         margin-left: 1rem;
         margin-bottom: 0.8rem;
+        @include sm {
+            grid-column: 2 / 3;
+            grid-row: 3 / 4;
+            margin-left: 1rem;
+            margin-bottom: 0.8rem;
+        }
         @include md {
+            grid-column: 4 / 5;
+            grid-row: 1 / -1;
             margin-left: 0;
             margin-bottom: 0;
         }
@@ -365,6 +447,7 @@ button {
             display: block;
             width: 15px;
             height: 15px;
+            margin: 0;
             transform: rotate(0);
             transition: transform 0.3s ease-in-out;
         }
@@ -372,6 +455,98 @@ button {
             grid-column: 5 / 6;
             justify-self: center;
             margin-right: 0;
+        }
+    }
+}
+
+.loader {
+    position: relative;
+    width: 5rem;
+    height: 5rem;
+    margin: 5rem auto;
+    border-radius: 50%;
+    background: #fff;
+    background: -moz-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
+    background: -webkit-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
+    background: -o-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
+    background: -ms-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
+    background: linear-gradient(to right, #fff 10%, rgba(255, 255, 255, 0) 42%);
+    -webkit-animation: load3 1.4s infinite linear;
+    animation: load3 1.4s infinite linear;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+}
+.loader::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 50%;
+    border-radius: 100% 0 0 0;
+    background-color: #fff;
+}
+.loader::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    background-color: $primary;
+}
+@-webkit-keyframes load3 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load3 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+.show-more-button {
+    position: relative;
+    display: block;
+    margin: 5rem auto;
+    padding: 1rem;
+    border: 0.1rem solid $primary-lighter-2;
+    border-radius: .4rem;
+    background-color: transparent;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    &::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background-color: $primary-lighter-1;
+        opacity: 1;
+        transition: all 0.3s ease-in-out;
+    }
+    &:hover {
+        &::after {
+            width: 100%;
         }
     }
 }
