@@ -6,13 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="glide/css/glide.core.css">
-
-    <title>VibesIn</title>
+    <title>Vibes In</title>
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <div class="logo">VibesIn</div>
+            <div class="logo">Vibes In</div>
             <p>v-1.0</p>
         </div>
     </header>
@@ -45,7 +44,7 @@
                 <div class="dropdown form__group">
                     <div class="dropdown__select">
                         <span class="select">-- Select --</span>
-                        <img src="img/logo_chevron_down.svg" alt="chevron-down-icon">
+                        <img src="img/icon-chevron-down.svg" alt="chevron-down-icon">
                     </div>
                     <ul class="dropdown__list dropdown__list--hidden">
                         <li class="dropdown__list--item" data-value="all">All</li>
@@ -55,7 +54,8 @@
                     </ul>
                 </div>
                 <div class="form__group">
-                    <input type="submit" name="submit-input" id="submit-input" value="Search">
+                    <!-- <input type="submit" name="submit-input" id="submit-input" value="Search"> -->
+                    <button type="submit" name="submit-input" id="submit-input">Search</button>
                 </div>
             </form>
             <p class="error-info"></p>
@@ -76,7 +76,10 @@
             </div>
             <ul class="results-list">
                 <!-- <li class="results-list__item">
-                    <p class="results-list__item--id">1</p>
+                    <p class="results-list__item--id">
+                        <img src="img/hashtag.svg" alt="">
+                        <span>1</span>
+                    </p>
                     <p class="results-list__item--artist">
                         <img src="img/artist.svg" alt="">
                         <span>Daft Punk</span>
@@ -95,7 +98,7 @@
                 </li> -->
             </ul>
             <button id="btn-scroll-top">
-                <img src="img/logo_chevron_up.svg" alt="chevron-up-icon">
+                <img src="img/icon-chevron-up.svg" alt="chevron-up-icon">
                 <span class="screen-reader-text">Back to top</span>
             </button>
         </div>
