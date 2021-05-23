@@ -13,7 +13,8 @@ const formElt = document.querySelector('.form');
 const errorInfoElt = document.querySelector('.error-info');
 
 let parameter = null;
-
+let offset = 0;
+let cumulOffset = 0;
 
 function manageClass(element) {
     // Si l'argument le second paramètre est à true, ajoute cette classe, si non, supprime la.
@@ -53,9 +54,19 @@ dropdownListItems.forEach((item) => {
     })
 })
 
+function limitCharacterLength(string) {
+    let stringLength = 38;
+    let newString = string.length > stringLength 
+        ? string.slice(0, stringLength - 3).concat('...')
+        : string;
+    return newString;
+}
+
 function createList(id, artist, title, album, mbid) {
     // Création des éléments
     let newId = document.createElement('p');
+    let newIdImg = document.createElement('img');
+    let newIdSpan = document.createElement('span');
     // Artiste
     let newArtist= document.createElement('p');
     let newArtistImg = document.createElement('img');
@@ -81,20 +92,24 @@ function createList(id, artist, title, album, mbid) {
     newButton.classList.add('results-list__item--more');
     newLine.classList.add('results-list__item');
     // Attributs des logos
-    newArtistImg.src = 'img/artist.svg';
-    newArtistImg.alt = 'logo_artist';
-    newTitleImg.src = 'img/music-note.svg';
-    newTitleImg.alt = 'logo_title';
-    newAlbumImg.src = 'img/disc.svg';
-    newAlbumImg.alt = 'logo_album';
-    newImgButton.src = 'img/logo_plus.svg';
-    newImgButton.alt = 'logo_plus';
+    newIdImg.src = 'img/icon-hashtag.svg';
+    newIdImg.alt = 'id_hashtag';
+    newArtistImg.src = 'img/icon-artist.svg';
+    newArtistImg.alt = 'artist_icon';
+    newTitleImg.src = 'img/icon-music-note.svg';
+    newTitleImg.alt = 'title_icon';
+    newAlbumImg.src = 'img/icon-disc.svg';
+    newAlbumImg.alt = 'album_icon';
+    newImgButton.src = 'img/icon-plus.svg';
+    newImgButton.alt = 'plus_icon';
     // Contenu textuel des éléments
-    newId.textContent = id;
+    newIdSpan.textContent = id;
     newArtistSpan.textContent = artist;
     newTitleSpan.textContent = title;
     newAlbumSpan.textContent = album;
     // Ajout images et span
+    newId.appendChild(newIdImg);
+    newId.appendChild(newIdSpan);
     newArtist.appendChild(newArtistImg);
     newArtist.appendChild(newArtistSpan);
     newTitle.appendChild(newTitleImg);
@@ -118,11 +133,27 @@ function createList(id, artist, title, album, mbid) {
     resultsList.insertAdjacentElement('beforeend', newLine);
 }
 
+function createSpinnerLoader() {
+    let newLoadingWheel = document.createElement('div');
+    newLoadingWheel.classList.add('loader');
+    resultsList.appendChild(newLoadingWheel);
+}
+
+function createShowMoreButton() {
+    let showMoreButton = document.createElement('button');
+    showMoreButton.textContent = 'More results';
+    showMoreButton.classList.add('show-more-button');
+    resultsList.appendChild(showMoreButton);
+}
+
 formElt.addEventListener('submit', (e) => {
     // Empêche le comportement par défault de la soumission d'un formulaire
     e.preventDefault();
+    // Réinitialise offset à zéro à chaque nouvelle recherche
+    offset = 0;
+    cumulOffset = 0;
+    // Si l'utilisateur a rentré plusieurs mots, englobe la valeur de l'input entre guillemets, afin de filtrer plus précisément les résultats de la requête
     let findSpaceRegex = /\W/;
-    // Englobe la valeur de l'input entre guillemet si l'utilisateur a rentré plusieurs mots, afin de filtrer plus précisément les résultats de la requête
     let inputValue = findSpaceRegex.test(searchInputElt.value) ? '\"' + searchInputElt.value + '\"' : searchInputElt.value;
     // Si le champs input n'est pas vide
     if (inputValue.length > 0) {
@@ -136,13 +167,8 @@ formElt.addEventListener('submit', (e) => {
             while (resultsList.hasChildNodes()) {
                 resultsList.firstChild.remove();
             }
-            if (selectSpanElt.getAttribute('data-value') === 'all') {
-                searchAllTypesRequest(encodeURIComponent(inputValue));
-            } else {
-                searchRequest(parameter, encodeURIComponent(inputValue));
-            }
-            //console.log(encodeURIComponent(inputValue));
-            //console.log(inputValue);
+            createSpinnerLoader();
+            searchRequest(parameter, encodeURIComponent(inputValue));
         } else {
             errorInfoElt.textContent = 'Please select your type of search.';
         }
@@ -153,21 +179,26 @@ formElt.addEventListener('submit', (e) => {
 
 function searchRequest(parameter, value) {
     let request = new XMLHttpRequest();
+    // Construction de l'url en fonction de ce que recherche l'utilisateur
+    let URL = selectSpanElt.getAttribute('data-value') !== 'all'
+        ? `http://musicbrainz.org/ws/2/recording/?query=${parameter}:${value}&fmt=json&limit=50&offset=${offset}`
+        : `http://musicbrainz.org/ws/2/recording/?query=release:${value}artist:${value}recording:${value}&fmt=json&limit=50&offset=${offset}`;
+    // Lorsque l'état de chargement du protocole change
     request.addEventListener('readystatechange', () => {
         // Si l'opération de récupération est terminée
-        console.log(request.readyState);
-        if (request.readyState !== XMLHttpRequest.DONE) {
-            console.log('LOADER');
-        }
-        else if (request.readyState === XMLHttpRequest.DONE) {
+        if (request.readyState === XMLHttpRequest.DONE) {
             // Si la requête a été effectué avec succès
-            
             if (request.status === 200) {
+                // Suppression du loader de chargement s'il existe
+                if (document.querySelector('.loader') !== null) {
+                    document.querySelector('.loader').remove();
+                }
                 // Conversion des données JSON en données interprétables par le Javascript
                 let response = JSON.parse(request.response);
                 console.log(response);
                 // Affiche le nombre de résultats trouvés
-                resultCounterElt.textContent = response.count + ' results';
+                let plurial = response.count > 1 ? 's' : '';
+                resultCounterElt.textContent = response.count + ' result' + plurial;
                 // Si aucun résultat n'est trouvé
                 if (response.count === 0) {
                     // Affiche les infos a l'utilisateur
@@ -177,20 +208,40 @@ function searchRequest(parameter, value) {
                     // Si non lance la fonction createList pour chaque éléments du tableau recordings 
                     response.recordings.forEach((element, index) => {
                         createList(
-                            index + 1,
-                            element['artist-credit'][0].name,
-                            element.title,
-                            element.releases ? element.releases[0].title : '',
+                            response.offset + index + 1,
+                            limitCharacterLength(element['artist-credit'][0].name),
+                            limitCharacterLength(element.title),
+                            element.releases ? limitCharacterLength(element.releases[0].title) : '',
                             element.id
                         );
                     });
+                    // Incrémente le cumul
+                    cumulOffset += response.recordings.length;
+                    // S'il reste encore des résultat à afficher
+                    if (cumulOffset < response.count) {
+                        // Création d'un boutton pour afficher plus de résultats
+                        createShowMoreButton();
+                        // Incrémentation de l'offset
+                        offset = response.offset + 50;
+                        // Lors du clique sur le bouton précedemment crée
+                        document.querySelector('.show-more-button').addEventListener('click', (e) => {
+                            // Supression de ce dernier, pour laisser place au spinner de chargement
+                            e.target.remove();
+                            createSpinnerLoader();
+                            // Laisse passer une seconde pour bien apercevoir le spinner
+                            setTimeout(() => {
+                                // Envoie de la nouvelle requête pour récupérer les données suivantes
+                                searchRequest(parameter, value);
+                            }, 1000);
+                        })
+                    }
                 }
             } else {
                 console.error('Error !');
             }
         }
     })
-    request.open('GET', `http://musicbrainz.org/ws/2/recording/?query=${parameter}:${value}&fmt=json&limit=100&offset=0`);
+    request.open('GET', URL);
     request.send();
 }
 
