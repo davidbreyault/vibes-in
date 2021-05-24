@@ -11,26 +11,42 @@
 <body>
     <header class="header">
         <div class="container">
-            <div class="logo">Vibes In</div>
-            <p>v-1.0</p>
+            <div class="logo">
+                <p>Vibes In</p>
+                <div class="logo__bars">
+                    <div class="logo__bar"></div>
+                    <div class="logo__bar"></div>
+                    <div class="logo__bar"></div>
+                    <div class="logo__bar"></div>
+                    <div class="logo__bar"></div>
+                </div>
+            </div>
+            <nav class="navbar">
+                <button class="cta"><span>Sign up</span></button>
+                <button class="cta"><span>Log In</span></button>
+            </nav>
         </div>
     </header>
     <section class="hero">
-        <div class="container">
-            <div class="glide">
-                <div class="glide__track" data-glide-el="track">
-                    <ul class="glide__slides">
-                        <li class="glide__slide">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, deleniti. Pariatur voluptatum placeat fuga atque eum, dolor voluptates quos unde exercitationem minus tenetur dignissimos eos veniam quibusdam. Quidem, quod doloremque.</li>
-                        <li class="glide__slide">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, deleniti. Pariatur voluptatum placeat fuga atque eum, dolor voluptates quos unde exercitationem minus tenetur dignissimos eos veniam quibusdam. Quidem, quod doloremque.</li>
-                        <li class="glide__slide">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, deleniti. Pariatur voluptatum placeat fuga atque eum, dolor voluptates quos unde exercitationem minus tenetur dignissimos eos veniam quibusdam. Quidem, quod doloremque.</li>
-                    </ul>
+        <div class="glide">
+            <div class="glide__track" data-glide-el="track">
+                <ul class="glide__slides">
+                    <li class="glide__slide hero__landing">
+                        <div class="container">
+                            <h1>Make a sound decision</h1>
+                            <p>Millions of tracks and podcasts. No credit card required.</p>                                                                                         
+                        </div>
+                    </li>
+                    <li class="glide__slide">Ici c'est David !</li>
+                    <li class="glide__slide">Salut c'est cool !</li>
+                </ul>
+            </div>
+            <div class="glide__bullets" data-glide-el="controls[nav]">
+                <button class="glide__bullet" data-glide-dir="=0"></button>
+                <button class="glide__bullet" data-glide-dir="=1"></button>
+                <button class="glide__bullet" data-glide-dir="=2"></button>
                 </div>
-                <div class="glide__arrows" data-glide-el="controls">
-                    <button class="glide__arrow glide__arrow--left" data-glide-dir="<">prev</button>
-                    <button class="glide__arrow glide__arrow--right" data-glide-dir=">">next</button>
-                </div> 
-            </div> 
-        </div>   
+        </div> 
     </section>   
     <section class="search">
         <div class="container">
@@ -101,6 +117,31 @@
                 <img src="img/icon-chevron-up.svg" alt="chevron-up-icon">
                 <span class="screen-reader-text">Back to top</span>
             </button>
+        </div>
+    </section>
+    <section class="modal">
+        <div class="container">
+            <div class="modal__header">
+                <p></p>
+                <button class="close-modal">
+                    <span class="screen-reader-text">Bouton de la modal</span>
+                    <div class="close-modal__cross">
+                        <div class="close-modal__cross--bar"></div>
+                        <div class="close-modal__cross--bar"></div>
+                    </div>
+                </button>
+            </div>
+            <div class="modal__infos">
+                <h3>Informations</h3>
+                <p>Title : <span class="title"></span></p>
+                <p>Artist : <span class="artist"></span></p>
+                <p>Album : <span class="album"></span></p>
+                <p>Year : <span class="year"></span></p>
+                <p>Country : <span class="country"></span></p>
+                <p>Length : <span class="length"></span></p>
+                <p>Rating : <span class="rating"></span></p>
+                <h3>Covers</h3>
+            </div>
         </div>
     </section>
     <script src="glide/glide.js"></script>
