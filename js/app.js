@@ -11,13 +11,15 @@ const searchSpanElt = document.querySelector('.search-span');
 const searchInputElt = document.querySelector('#search-input');
 const formElt = document.querySelector('.form');
 const errorInfoElt = document.querySelector('.error-info');
+const modalElt = document.querySelector('.modal');
+const closeModalButton = document.querySelector('.close-modal__cross');
 
 let parameter = null;
 let offset = 0;
 let cumulOffset = 0;
 
 function manageClass(element) {
-    // Si l'argument le second paramètre est à true, ajoute cette classe, si non, supprime la.
+    // Si le second paramètre est à true, ajoute cette classe, si non, supprime la.
     element.classList.toggle('translate', searchInputElt.value.length > 0);
 }
 
@@ -120,8 +122,9 @@ function createList(id, artist, title, album, mbid) {
     newButton.appendChild(newImgButton);
     // Nouvelle requête lors du clique sur le bouton
     newButton.addEventListener('click', () => {
+        modalElt.classList.add('open');
         console.log(id + ' mbid :  ' + newMbid);
-        lookupRequest(parameter, newMbid);
+        lookupRequest(newMbid);
     })
     // Ajout des éléments
     newLine.appendChild(newId);
@@ -245,36 +248,6 @@ function searchRequest(parameter, value) {
     request.send();
 }
 
-function searchAllTypesRequest(value) {
-    let request = new XMLHttpRequest();
-    request.addEventListener('readystatechange', () => {
-        //console.log(request.readyState); 
-        if (request.readyState === XMLHttpRequest.DONE) {
-            if (request.status === 200) {
-                // Conversion des données JSON en données interprétables par le Javascript
-                let response = JSON.parse(request.response);
-                console.log(response);
-                resultCounterElt.textContent = response.count + ' results';
-                response.recordings.forEach((element, index) => {
-                    createList(
-                        index + 1,
-                        element['artist-credit'][0].name,
-                        element.title,
-                        element.releases ? element.releases[0].title : '',
-                        element.id
-                    );
-                });
-            } else {
-                console.error('Error !');
-            }
-        }
-    })
-    request.open('GET', `http://musicbrainz.org/ws/2/recording/?query=release:${value}artist:${value}recording:${value}&fmt=json&limit=100&offset=0`);
-    request.send();
-}
-
-//searchAllTypesRequest();
-
 function lookupRequest(mbid) {
     let request = new XMLHttpRequest();
     request.addEventListener('readystatechange', () => {
@@ -283,19 +256,34 @@ function lookupRequest(mbid) {
                 // Conversion des données JSON en données interprétables par le Javascript
                 let response = JSON.parse(request.response);
                 console.log(response);
+                document.querySelector('.modal__header p').textContent = response['artist-credit'][0].name + ' - ' + response.title;
+                document.querySelector('.modal__infos .title').textContent = response.title;
+                document.querySelector('.modal__infos .artist').textContent = response['artist-credit'][0].name;
+                document.querySelector('.modal__infos .album').textContent = response.releases[0].title;
+                document.querySelector('.modal__infos .year').textContent = response['first-release-date'].slice(0, 4);
+                document.querySelector('.modal__infos .country').textContent = response.releases[0].country;
+
             } else {
                 console.error('Error !');
             }
         }
     })
-    request.open('GET', `https://musicbrainz.org/ws/2/recording/${mbid}?inc=artists+releases&fmt=json`);
+    request.open('GET', `http://musicbrainz.org/ws/2/recording/${mbid}?inc=artists+releases+ratings+release-groups&fmt=json`);
+    //request.open('GET', `https://musicbrainz.org/ws/2/release/${mbid}?inc=artists&fmt=json`);
     request.send(); 
 }
 
-function lookupRequestTest(parameter, mbid) {
+//lookupRequest('d7cadc02-ffbd-41b9-a2e0-2af1dd412b3b');
+
+
+
+
+
+
+
+function lookupRequestCover(mbid) {
     let request = new XMLHttpRequest();
     request.addEventListener('readystatechange', () => {
-        //console.log(request.readyState); 
         if (request.readyState === XMLHttpRequest.DONE) {
             if (request.status === 200) {
                 // Conversion des données JSON en données interprétables par le Javascript
@@ -306,8 +294,13 @@ function lookupRequestTest(parameter, mbid) {
             }
         }
     })
-    request.open('GET', `https://musicbrainz.org/ws/2/${parameter}/${mbid}?inc=artists+releases&fmt=json`);
+    request.open('GET', `http://coverartarchive.org/release/${mbid}`);
+    //request.open('GET', `https://musicbrainz.org/ws/2/release/${mbid}?inc=artists&fmt=json`);
     request.send(); 
 }
 
-//lookupRequestTest('recording', '34d2d331-d96b-4008-b8b2-d194c9cbf810');
+//lookupRequestCover('d7cadc02-ffbd-41b9-a2e0-2af1dd412b3b');
+
+closeModalButton.addEventListener('click', () => {
+    modalElt.classList.remove('open');
+})
