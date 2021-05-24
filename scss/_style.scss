@@ -46,6 +46,34 @@ body {
     font-family: Montserrat, sans-serif;
 }
 
+h1 {
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 400;
+    font-size: 5rem;
+    line-height: 1;
+    color: rgba(245, 232, 232, 0.947);
+    text-align: center;
+    animation: fade-in 3s ease-in-out 0.5s both;
+    @include sm {
+        font-size: 8rem;
+    }
+    @include md {
+        font-size: 10rem;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
 label, input, select {
     display: block;
 }
@@ -81,18 +109,135 @@ input {
 }
 
 .header {
+    padding: 2rem 0;
+    background-color: $primary-darker-1;
+    font-weight: 600;
     .container {
         @include flex-layout;
     }
     .logo {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        @include flex-layout(row, space-between, baseline);
+        p {
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            @include sm {
+                font-size: 1.6rem;
+            }
+        }
+        &__bars {
+            @include flex-layout(row, center, center);
+        }
+        &__bar {
+            width: .2rem;
+            height: 2rem;
+            margin-right: 0.15rem;
+            background: linear-gradient(
+                0deg, rgb(98, 101, 109) 0%,
+                rgb(177, 181, 192) 45%,
+                rgb(255, 255, 255) 100%
+            );
+            transform-origin: bottom;
+            &:nth-child(1) {
+                animation: up-and-down-bis 1s ease-in-out 0.7s both alternate infinite;
+            }
+            &:nth-child(2) {
+                animation: up-and-down-bis 0.6s ease-in-out 0.15s both alternate infinite;
+            }
+            &:nth-child(3) {
+                animation: up-and-down 1s ease-in-out 0.65s both alternate infinite;
+            }
+            &:nth-child(4) {
+                animation: up-and-down-bis 0.8s ease-in-out 0.3s both alternate infinite;
+            }
+            &:nth-child(5) {
+                animation: up-and-down 1s ease-in-out 0.9s both alternate infinite;
+            }
+        }
+    }
+    @keyframes up-and-down {
+        from {
+            transform: scaleY(0.3);
+        }
+        to {
+            transform: scaleY(0.6);
+        }
+    }
+    @keyframes up-and-down-bis {
+        from {
+            transform: scaleY(0.2);
+        }
+        to {
+            transform: scaleY(1);
+        }
+    }
+    .cta {
+        position: relative;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.4rem;
+        background-color: transparent;
+        transition: all 0.3s ease-in-out;
+        @include sm {
+            padding: 1rem 2rem;
+        }
+        span {
+            display: block;
+            font-size: 1.2rem;
+            transition: all 0.5s ease-in-out;
+            @include sm {
+                font-size: 1.6rem;
+            }
+        }
+        &:last-child {
+            margin-left: 0.3rem;
+            background-color: $secondary;
+            @include sm {
+                margin-left: 1rem;
+            }
+        }
+        &:hover {
+            color: #fff;
+            span {
+                transform: scale(1.02);
+            }
+        }
     }
 }
 
 .hero {
     background-color: $primary-darker-1;
-    min-height: calc(100vh - 4.4rem);
+    min-height: calc(100vh - 6.8rem);
+    @include sm {
+        min-height: calc(100vh - 8.4rem);
+    }
+}
+
+.hero__landing {
+    background-image: linear-gradient(
+        rgba(17, 19, 26, 0.8) 0%,
+        rgba(17, 19, 26, 0.302) 50%,
+        rgba(29, 32, 41, 0.88) 100%,
+    ),
+    url("../img/bg-bokeh.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    .container {
+        @include flex-layout(column, center, center);
+        min-height: calc(100vh - 19rem);
+        mix-blend-mode: color-dodge;
+        p {
+            margin-top: 2rem;
+            color: rgba(224, 233, 235, 0.947);
+            font-size: 1.5rem;
+            font-weight: 200;
+            text-align: center;
+            @include sm {
+                margin-top: 5rem;
+                font-size: 2rem;
+            }
+        }
+    }
 }
 
 .glide {
@@ -100,14 +245,36 @@ input {
 }
 
 .glide__slide {
-    min-height: calc(100vh - 4.4rem);
-    border: 1px red solid;
+    min-height: calc(100vh - 6.8rem);
+    @include sm {
+        min-height: calc(100vh - 8.4rem);
+    }
 }
 
-.glide__arrows {
+.glide__bullets {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    bottom: 3%;
+    border-radius: 1.5rem;
+    transform: translate(-50%, -50%);
+}
+
+.glide__bullet {
+    width: 1.2rem;
+    height: 1.2rem;
+    padding: 0;
+    border-radius: 2em;
+    border: none;
+    background-color: $text-primary;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        background-color: #fff;
+        transform: scale(1.1);
+    }
+}
+
+.glide__bullet:not(:last-child) {
+    margin-right: 0.3rem;
 }
 
 .search {
@@ -188,7 +355,8 @@ input {
                 cursor: pointer;
                 transition: all 0.2s ease-in-out;
                 &:hover {
-                    background-color: $primary-lighter-2;
+                    background-color: $secondary-lighter;
+                    color: #fff;
                     transition: all 0.2s ease-in-out; 
                 }
             }
@@ -199,7 +367,7 @@ input {
         width: 100%;
         padding: 1rem;
         border-radius: .4rem;
-        border: 0.1rem solid $primary-lighter-2;
+        border: 0.1rem solid $text-primary;
         background-color: transparent;
         overflow: hidden;
         transition: all 0.3s ease-in-out;
@@ -232,9 +400,6 @@ input {
     }
 }
 
-// #########################################################################################
-// #########################################################################################
-// #########################################################################################
 .results {
     min-height: calc(100vh - 26.4rem);
     p {
@@ -295,16 +460,12 @@ input {
     padding: 0;
     border: none;
     border-radius: 2em;
-    background-color: $text-primary;
-    transition: all .2s ease-in-out;
-    &:hover {
-        background-color: darken($text-primary, 20%);
-    }
+    background-color: $secondary-lighter;
 }
 
 .results-list {
     p {
-        color: darken($text-primary, 20%);
+        color: darken($text-primary, 15%);
     }
     img {
         margin-right: 1rem;
@@ -352,7 +513,7 @@ input {
             margin: 0;
             padding-left: 1rem;
             padding-right: 1rem;
-            border-right: 0.1rem solid $primary-lighter-2;
+            border-right: 0.1rem solid $primary-lighter-1;
             text-align: center;
             img {
                 margin-right: 0.3rem;
@@ -465,12 +626,12 @@ input {
     height: 5rem;
     margin: 5rem auto;
     border-radius: 50%;
-    background: #fff;
-    background: -moz-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
-    background: -webkit-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
-    background: -o-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
-    background: -ms-linear-gradient(left, #fff 10%, rgba(255, 255, 255, 0) 42%);
-    background: linear-gradient(to right, #fff 10%, rgba(255, 255, 255, 0) 42%);
+    background: $secondary-lighter;
+    background: -moz-linear-gradient(left, $secondary-lighter 10%, rgba(255, 255, 255, 0) 42%);
+    background: -webkit-linear-gradient(left, $secondary-lighter 10%, rgba(255, 255, 255, 0) 42%);
+    background: -o-linear-gradient(left, $secondary-lighter 10%, rgba(255, 255, 255, 0) 42%);
+    background: -ms-linear-gradient(left, rgb(134, 128, 128) 10%, rgba(255, 255, 255, 0) 42%);
+    background: linear-gradient(to right, $secondary-lighter 10%, rgba(255, 255, 255, 0) 42%);
     -webkit-animation: load3 1.4s infinite linear;
     animation: load3 1.4s infinite linear;
     -webkit-transform: translateZ(0);
@@ -485,7 +646,7 @@ input {
     width: 50%;
     height: 50%;
     border-radius: 100% 0 0 0;
-    background-color: #fff;
+    background-color: $secondary-lighter;
 }
 .loader::after {
     content: '';
@@ -527,7 +688,7 @@ input {
     display: block;
     margin: 5rem auto;
     padding: 1rem;
-    border: 0.1rem solid $primary-lighter-2;
+    border: 0.1rem solid $text-primary;
     border-radius: .4rem;
     background-color: transparent;
     overflow: hidden;
@@ -547,6 +708,98 @@ input {
     &:hover {
         &::after {
             width: 100%;
+        }
+    }
+}
+
+.modal {
+    @include flex-layout(column, center, center);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: $primary-darker-1;
+    transform: scale(0);
+    font-size: 1.2rem;
+    @include sm {
+        font-size: 1.6rem;
+    }
+    &.open {
+        transform: scale(1);
+    }
+    .container {
+        width: 100%;
+        height: 100%;
+        background-color: $primary;
+        @include sm {
+            width: 80%;
+            height: 80%;
+            border-radius: 0.4rem;
+        }
+    }
+    &__header {
+        @include flex-layout(row, space-between, center);
+        padding: 1rem 0;
+        border-bottom: 1px solid $primary-lighter-1;
+        .close-modal {
+            flex-shrink: 0;
+            width: 3rem;
+            height: 3rem;
+            margin-left: 1rem;
+            padding: 0;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            &__cross {
+                @include flex-layout(column, space-between, center);
+                position: relative;
+                width: 100%;
+                height: 100%;
+                transform: rotate(45deg);
+                &--bar {
+                    width: 100%;
+                    height: 2px;
+                    border-radius: 1px;
+                    background-color: $secondary-lighter;
+                    transition: all 0.3s ease-in-out;
+                    &:first-child {
+                        position: absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+                    }
+                    &:last-child {
+                        position: absolute;
+                        left: 50%;
+                        transform-origin: 1px 1px;
+                        transform: rotate(90deg) translateY(50%);
+                    }
+                }
+            }
+        }
+    }
+    &__infos {
+        h3 {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            color: #fff;
+            font-size: 3rem;
+            font-weight: 200;
+            @include sm {
+                font-size: 4rem;
+            }
+        }
+        span {
+            font-weight: 200;
+        }
+        p {
+            margin-left: 2rem;
+            margin-right: 2rem;
+            padding: 1rem 0;
+            font-weight: 600;
+        }
+        p:not(:last-of-type) {
+            border-bottom: 1px solid $primary-lighter-1;
         }
     }
 }
