@@ -176,6 +176,7 @@ input {
         border: none;
         border-radius: 0.4rem;
         background-color: transparent;
+        color: #fff;
         transition: all 0.3s ease-in-out;
         @include sm {
             padding: 1rem 2rem;
@@ -190,13 +191,12 @@ input {
         }
         &:last-child {
             margin-left: 0.3rem;
-            background-color: $secondary;
+            background-color: $secondary-lighter;
             @include sm {
                 margin-left: 1rem;
             }
         }
         &:hover {
-            color: #fff;
             span {
                 transform: scale(1.02);
             }
@@ -627,52 +627,34 @@ input {
     margin: 5rem auto;
     border-radius: 50%;
     background: $secondary-lighter;
-    background: -moz-linear-gradient(left, $secondary-lighter 10%, rgba(255, 255, 255, 0) 42%);
-    background: -webkit-linear-gradient(left, $secondary-lighter 10%, rgba(255, 255, 255, 0) 42%);
-    background: -o-linear-gradient(left, $secondary-lighter 10%, rgba(255, 255, 255, 0) 42%);
-    background: -ms-linear-gradient(left, rgb(134, 128, 128) 10%, rgba(255, 255, 255, 0) 42%);
     background: linear-gradient(to right, $secondary-lighter 10%, rgba(255, 255, 255, 0) 42%);
-    -webkit-animation: load3 1.4s infinite linear;
-    animation: load3 1.4s infinite linear;
-    -webkit-transform: translateZ(0);
-    -ms-transform: translateZ(0);
+    animation: roll 1.4s infinite linear;
     transform: translateZ(0);
-}
-.loader::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 50%;
-    border-radius: 100% 0 0 0;
-    background-color: $secondary-lighter;
-}
-.loader::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    margin: auto;
-    width: 75%;
-    height: 75%;
-    border-radius: 50%;
-    background-color: $primary;
-}
-@-webkit-keyframes load3 {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 50%;
+        border-radius: 100% 0 0 0;
+        background-color: $secondary-lighter;
     }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        width: 75%;
+        height: 75%;
+        border-radius: 50%;
+        background-color: $primary;
     }
 }
-
-@keyframes load3 {
+@keyframes roll {
     0% {
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
@@ -731,11 +713,13 @@ input {
     .container {
         width: 100%;
         height: 100%;
-        background-color: $primary;
+        background-color: lighten($primary, 5%);
+        overflow-y: scroll;
         @include sm {
             width: 80%;
             height: 80%;
             border-radius: 0.4rem;
+            box-shadow: 5px 5px 30px rgba(0, 0, 0, .85);
         }
     }
     &__header {
@@ -791,15 +775,24 @@ input {
         }
         span {
             font-weight: 200;
+            color: $text-primary;
         }
         p {
             margin-left: 2rem;
             margin-right: 2rem;
             padding: 1rem 0;
             font-weight: 600;
+            color: #e2e2e2;
         }
         p:not(:last-of-type) {
             border-bottom: 1px solid $primary-lighter-1;
         }
+    }
+    .covers {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+        place-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
     }
 }
