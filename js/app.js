@@ -160,16 +160,25 @@ function createList(id, artist, title, album, mbid) {
     resultsList.insertAdjacentElement('beforeend', newLine);
 }
 
+// Création de la roulette de chargement
 function createSpinnerLoader(location) {
     let newLoadingWheel = document.createElement('div');
     newLoadingWheel.classList.add('loader');
     location.appendChild(newLoadingWheel);
 }
 
+// Création du bouton qui affichera les résultats suivants
 function createShowMoreButton() {
     let showMoreButton = document.createElement('button');
     showMoreButton.textContent = 'More results';
     showMoreButton.classList.add('show-more-button');
+    // Lors du clique sur le nouveau boutton
+    showMoreButton.addEventListener('click', (e) => {
+        // Supression de ce dernier
+        e.target.remove();
+        // Création du spinner de chargement
+        createSpinnerLoader(resultsList);
+    })
     resultsList.appendChild(showMoreButton);
 }
 
@@ -253,10 +262,7 @@ function searchRequest(parameter, value) {
                         // Incrémentation de l'offset
                         offset = response.offset + 50;
                         // Lors du clique sur le bouton précedemment crée
-                        document.querySelector('.show-more-button').addEventListener('click', (e) => {
-                            // Supression de ce dernier, pour laisser place au spinner de chargement
-                            e.target.remove();
-                            createSpinnerLoader(resultsList);
+                        document.querySelector('.show-more-button').addEventListener('click', () => {
                             // Laisse passer une seconde pour bien apercevoir le spinner
                             setTimeout(() => {
                                 // Envoie de la nouvelle requête pour récupérer les données suivantes
@@ -286,7 +292,10 @@ function lookupRequest(mbid) {
                 modalInfoTitle.textContent = response.title;
                 modalInfoArtist.textContent = response['artist-credit'][0].name;
                 modalInfoAlbum.textContent = response.releases[0].title;
-                modalInfoCountry.textContent = response.releases[0].country;
+                // Affichage du pays d'origine
+                response.releases[0].country
+                    ? modalInfoCountry.textContent = response.releases[0].country
+                    : ' /';
                 // Affichage de la date
                 response['first-release-date'] 
                     ? modalInfoYear.textContent = response['first-release-date'].slice(0, 4) 
@@ -304,11 +313,7 @@ function lookupRequest(mbid) {
                 }
                 modalInfoGenre.textContent = genres;
                 // Traitement et affichage de la durée
-                let duration = response.length;
-                // Transformation de la 'length' exprimée en millisecondes en minutes et secondes
-                let minutes = (Math.round(duration / 1000) / 60).toFixed(1).slice(0, 1).padStart(2, '0');
-                let seconds = (Math.round(duration / 1000) % 60).toString().padStart(2, '0');
-                modalInfoLength.textContent = `${minutes}:${seconds}`;
+                modalInfoLength.textContent = response.length === null ? ' /' : convertLengthTitle(response.length);
                 // Récupération des id de tout les albums
                 response.releases.forEach((album) => {
                     console.log(album.id);
@@ -321,11 +326,23 @@ function lookupRequest(mbid) {
         }
     })
     request.open('GET', `http://musicbrainz.org/ws/2/recording/${mbid}?inc=artists+releases+ratings+release-groups+genres&fmt=json`);
-    //request.open('GET', `https://musicbrainz.org/ws/2/release/${mbid}?inc=artists&fmt=json`);
     request.send(); 
 }
 
-//lookupRequest('d7cadc02-ffbd-41b9-a2e0-2af1dd412b3b');
+function convertLengthTitle(number) {
+    // Transformation (au format 'MM:SS') de la durée exprimée en millisecondes
+    let minutes = (Math.floor(number / 1000) / 60).toString();
+    // Trouve au moins un chiffre, puis un point, puis un ou plusieurs chiffres 
+    let regex = /^(\d{1,})\.(\d{1,})$/;
+    // Regroupe minutes et secondes
+    let arrayGroup = minutes.match(regex);
+    // Récupération des minutes dans le tableau 'arrayGroup'
+    minutes = arrayGroup[1].padStart(2, '0');
+    // Traitement des secondes
+    let seconds = (Math.round(number / 1000) % 60).toString().padStart(2, '0');
+    // Retourne l'affichage adéquat de la durée
+    return minutes + ' : ' + seconds;
+}
 
 // Création dynamique des images dans le DOM
 function printCovers(url) {
@@ -358,31 +375,10 @@ function lookupRequestCover(mbid) {
                     //console.log(item.thumbnails['250']);
                 });
             } else {
-                console.error('Error !');
+                console.error('Aucune cover d\'album n\'a pu être trouvé avec cet mbid');
             }
         }
     })
     request.open('GET', `http://coverartarchive.org/release/${mbid}`);
     request.send(); 
 }
-
-//lookupRequestCover('c6102664-c9e6-438e-aff7-936a1f82d16e');
-
-function test() {
-    let request = new XMLHttpRequest();
-    request.addEventListener('readystatechange', () => {
-        if (request.readyState === XMLHttpRequest.DONE) {
-            if (request.status === 200) {
-                // Conversion des données JSON en données interprétables par le Javascript
-                let response = JSON.parse(request.response);
-                console.log(response);
-            } else {
-                console.error('Error !');
-            }
-        }
-    })
-    request.open('GET', `https://musicbrainz.org/ws/2/release/c6102664-c9e6-438e-aff7-936a1f82d16e?inc=aliases+artist-credits+labels+discids+recordings&fmt=json`);
-    request.send(); 
-}
-
-//test();
