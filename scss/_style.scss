@@ -618,52 +618,9 @@ input {
             margin-right: 0;
         }
     }
+    @include loadingSpinner();
 }
 
-.loader {
-    position: relative;
-    width: 5rem;
-    height: 5rem;
-    margin: 5rem auto;
-    border-radius: 50%;
-    background: $secondary-lighter;
-    background: linear-gradient(to right, $secondary-lighter 10%, rgba(255, 255, 255, 0) 42%);
-    animation: roll 1.4s infinite linear;
-    transform: translateZ(0);
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 50%;
-        height: 50%;
-        border-radius: 100% 0 0 0;
-        background-color: $secondary-lighter;
-    }
-    &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        margin: auto;
-        width: 75%;
-        height: 75%;
-        border-radius: 50%;
-        background-color: $primary;
-    }
-}
-@keyframes roll {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
 
 .show-more-button {
     position: relative;
@@ -705,6 +662,9 @@ input {
     transform: scale(0);
     font-size: 1.2rem;
     @include sm {
+        font-size: 1.4rem;
+    }
+    @include lg {
         font-size: 1.6rem;
     }
     &.open {
@@ -716,10 +676,16 @@ input {
         background-color: lighten($primary, 5%);
         overflow-y: scroll;
         @include sm {
-            width: 80%;
-            height: 80%;
+            width: 90%;
+            height: 90%;
             border-radius: 0.4rem;
             box-shadow: 5px 5px 30px rgba(0, 0, 0, .85);
+        }
+        @include md {
+            width: 70%;
+        }
+        @include lg {
+            width: 60%;
         }
     }
     &__header {
@@ -778,11 +744,13 @@ input {
             color: $text-primary;
         }
         p {
-            margin-left: 2rem;
-            margin-right: 2rem;
             padding: 1rem 0;
             font-weight: 600;
             color: #e2e2e2;
+            @include sm {
+                margin-left: 2rem;
+                margin-right: 2rem;
+            }
         }
         p:not(:last-of-type) {
             border-bottom: 1px solid $primary-lighter-1;
@@ -795,4 +763,5 @@ input {
         gap: 1rem;
         margin-bottom: 2rem;
     }
+    @include loadingSpinner(lighten($primary, 5%), 0);
 }
