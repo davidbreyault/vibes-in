@@ -822,19 +822,21 @@ input {
     margin-right: 0;
   }
 }
-
-.loader {
+.results-list .loader {
   position: relative;
   width: 5rem;
   height: 5rem;
-  margin: 5rem auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
   border-radius: 50%;
   background: #ff4b23;
   background: linear-gradient(to right, #ff4b23 10%, rgba(255, 255, 255, 0) 42%);
   animation: roll 1.4s infinite linear;
   transform: translateZ(0);
 }
-.loader::before {
+.results-list .loader::before {
   content: "";
   position: absolute;
   top: 0;
@@ -844,7 +846,7 @@ input {
   border-radius: 100% 0 0 0;
   background-color: #ff4b23;
 }
-.loader::after {
+.results-list .loader::after {
   content: "";
   position: absolute;
   top: 0;
@@ -857,7 +859,6 @@ input {
   border-radius: 50%;
   background-color: #2d2f33;
 }
-
 @keyframes roll {
   0% {
     -webkit-transform: rotate(0deg);
@@ -868,6 +869,7 @@ input {
     transform: rotate(360deg);
   }
 }
+
 .show-more-button {
   position: relative;
   display: block;
@@ -911,6 +913,11 @@ input {
 }
 @media screen and (min-width: 36em) {
   .modal {
+    font-size: 1.4rem;
+  }
+}
+@media screen and (min-width: 62em) {
+  .modal {
     font-size: 1.6rem;
   }
 }
@@ -925,10 +932,20 @@ input {
 }
 @media screen and (min-width: 36em) {
   .modal .container {
-    width: 80%;
-    height: 80%;
+    width: 90%;
+    height: 90%;
     border-radius: 0.4rem;
     box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.85);
+  }
+}
+@media screen and (min-width: 48em) {
+  .modal .container {
+    width: 70%;
+  }
+}
+@media screen and (min-width: 62em) {
+  .modal .container {
+    width: 60%;
   }
 }
 .modal__header {
@@ -994,11 +1011,15 @@ input {
   color: #caccd4;
 }
 .modal__infos p {
-  margin-left: 2rem;
-  margin-right: 2rem;
   padding: 1rem 0;
   font-weight: 600;
   color: #e2e2e2;
+}
+@media screen and (min-width: 36em) {
+  .modal__infos p {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
 }
 .modal__infos p:not(:last-of-type) {
   border-bottom: 1px solid #505158;
@@ -1009,6 +1030,53 @@ input {
   place-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
+}
+.modal .loader {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 5rem;
+  border-radius: 50%;
+  background: #ff4b23;
+  background: linear-gradient(to right, #ff4b23 10%, rgba(255, 255, 255, 0) 42%);
+  animation: roll 1.4s infinite linear;
+  transform: translateZ(0);
+}
+.modal .loader::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  border-radius: 100% 0 0 0;
+  background-color: #ff4b23;
+}
+.modal .loader::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  background-color: #393b41;
+}
+@keyframes roll {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 /*# sourceMappingURL=style.css.map */
