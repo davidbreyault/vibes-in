@@ -4,9 +4,9 @@ window.addEventListener('scroll', () => {
     btnScrollToTop.style.display = window.pageYOffset >= 1000 ? 'flex' : 'none';
 })
 
-btnScrollToTop.addEventListener('click', (e) => {
+btnScrollToTop.addEventListener('click', () => {
     window.scrollTo({
-        top: 825,
+        top: 0,
         left:0,
         behavior:"smooth"
     });

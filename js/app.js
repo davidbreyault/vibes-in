@@ -29,6 +29,7 @@ const coversZoneElt = document.querySelector('.covers');
 let parameter = null;
 let offset = 0;
 let cumulOffset = 0;
+let covers;
 
 function manageClass(element) {
     // Si le second paramètre est à true, ajoute cette classe, si non, supprime la.
@@ -142,6 +143,7 @@ function createList(id, artist, title, album, mbid) {
     // Lors du clique sur le bouton
     newButton.addEventListener('click', () => {
         console.log(id + ' mbid :  ' + newMbid);
+        covers = 0;
         // Ouverture de la fenêtre modale
         modalElt.classList.add('open');
         scrollManager();
@@ -149,6 +151,7 @@ function createList(id, artist, title, album, mbid) {
         coversZoneElt.innerHTML = '';
         // Lancement d'une nouvelle requête pour récupérer les infos spécifiques et associées au bouton
         lookupRequest(newMbid);
+        createSpinnerLoader(coversZoneElt);
     })
     // Ajout des éléments
     newLine.appendChild(newId);
@@ -188,6 +191,7 @@ formElt.addEventListener('submit', (e) => {
     // Réinitialise offset à zéro à chaque nouvelle recherche
     offset = 0;
     cumulOffset = 0;
+    covers = 0;
     // Si l'utilisateur a rentré plusieurs mots, englobe la valeur de l'input entre guillemets, afin de filtrer plus précisément les résultats de la requête
     let findSpaceRegex = /\W/;
     let inputValue = findSpaceRegex.test(searchInputElt.value) ? '\"' + searchInputElt.value + '\"' : searchInputElt.value;
@@ -220,7 +224,7 @@ function searchRequest(parameter, value) {
     // Construction de l'url en fonction de ce que recherche l'utilisateur
     let URL = selectSpanElt.getAttribute('data-value') !== 'all'
         ? `http://musicbrainz.org/ws/2/recording/?query=${parameter}:${value}&fmt=json&limit=50&offset=${offset}`
-        : `http://musicbrainz.org/ws/2/recording/?query=release:${value}artist:${value}recording:${value}&fmt=json&limit=50&offset=${offset}`;
+        : `http://musicbrainz.org/ws/2/recording/?query=release:${value}%20OR%20artist:${value}%20OR%20recording:${value}&fmt=json&limit=50&offset=${offset}`;
     // Lorsque l'état de chargement du protocole change
     request.addEventListener('readystatechange', () => {
         // Si l'opération de récupération est terminée
@@ -271,8 +275,6 @@ function searchRequest(parameter, value) {
                         })
                     }
                 }
-            } else {
-                console.error('Error !');
             }
         }
     })
@@ -291,7 +293,10 @@ function lookupRequest(mbid) {
                 modalInfoHeader.textContent = response['artist-credit'][0].name + ' - ' + response.title;
                 modalInfoTitle.textContent = response.title;
                 modalInfoArtist.textContent = response['artist-credit'][0].name;
-                modalInfoAlbum.textContent = response.releases[0].title;
+                // Affichage de l'album
+                response.releases[0].title
+                    ? modalInfoAlbum.textContent = response.releases[0].title
+                    : ' /';
                 // Affichage du pays d'origine
                 response.releases[0].country
                     ? modalInfoCountry.textContent = response.releases[0].country
@@ -302,9 +307,10 @@ function lookupRequest(mbid) {
                     : ' /';
                 // Affichage des genres s'ils sont renseignés
                 let genres = '';
-                if (response.genres.length > 0) {
-                    response.genres.forEach((element) => {
-                        genres += (response.genres.indexOf(element) === response.genres.length - 1)
+                let dataGenres = response['artist-credit'][0].artist.genres;
+                if (dataGenres.length > 0) {
+                    dataGenres.forEach((element) => {
+                        genres += (dataGenres.indexOf(element) === dataGenres.length - 1)
                             ? element.name.charAt(0).toUpperCase() + element.name.slice(1)
                             : element.name.charAt(0).toUpperCase() + element.name.slice(1).concat(', ');
                     })
@@ -316,12 +322,14 @@ function lookupRequest(mbid) {
                 modalInfoLength.textContent = response.length === null ? ' /' : convertLengthTitle(response.length);
                 // Récupération des id de tout les albums
                 response.releases.forEach((album) => {
-                    console.log(album.id);
                     // Lancement de la requête pour récupérer les covers
                     lookupRequestCover(album.id);
                 })
-            } else {
-                console.error('Error !');
+                setTimeout(() => {
+                    if (covers === 0) {
+                        coversZoneElt.textContent = 'Aucune pochette d\'album disponible.'
+                    }
+                }, 3000);
             }
         }
     })
@@ -329,15 +337,16 @@ function lookupRequest(mbid) {
     request.send(); 
 }
 
+// Traitement de la durée
 function convertLengthTitle(number) {
     // Transformation (au format 'MM:SS') de la durée exprimée en millisecondes
-    let minutes = (Math.floor(number / 1000) / 60).toString();
+    let time = (Math.floor(number / 1000) / 60).toString();
     // Trouve au moins un chiffre, puis un point, puis un ou plusieurs chiffres 
     let regex = /^(\d{1,})\.(\d{1,})$/;
     // Regroupe minutes et secondes
-    let arrayGroup = minutes.match(regex);
+    let groupMinutesSeconds = time.match(regex);
     // Récupération des minutes dans le tableau 'arrayGroup'
-    minutes = arrayGroup[1].padStart(2, '0');
+    let minutes = groupMinutesSeconds[1].padStart(2, '0');
     // Traitement des secondes
     let seconds = (Math.round(number / 1000) % 60).toString().padStart(2, '0');
     // Retourne l'affichage adéquat de la durée
@@ -352,6 +361,7 @@ function printCovers(url) {
         let newCover = document.createElement('img');
         newCover.src = url;
         coversZoneElt.appendChild(newCover);
+        covers++;
     }
 }
 
@@ -366,19 +376,30 @@ function lookupRequestCover(mbid) {
     request.addEventListener('readystatechange', () => {
         if (request.readyState === XMLHttpRequest.DONE) {
             if (request.status === 200) {
+                // Suppression du loader de chargement s'il existe
+                if (document.querySelector('.loader') !== null) {
+                    document.querySelector('.loader').remove();
+                }
                 // Conversion des données JSON en données interprétables par le Javascript
                 let response = JSON.parse(request.response);
+                console.log(response);
                 // Pour chaque images présente dans le tableau
                 response.images.forEach(item => {
                     // Affiche l'image en question
-                    printCovers(item.thumbnails['250']);
-                    //console.log(item.thumbnails['250']);
+                    if (item.thumbnails['250']) {
+                        printCovers(item.thumbnails['250']);
+                    } else if (item.thumbnails.small) {
+                        printCovers(item.thumbnails.small);
+                    } else if (item.image) {
+                        printCovers(item.image);
+                    }
                 });
             } else {
                 console.error('Aucune cover d\'album n\'a pu être trouvé avec cet mbid');
             }
         }
-    })
+    });
     request.open('GET', `http://coverartarchive.org/release/${mbid}`);
     request.send(); 
 }
+
