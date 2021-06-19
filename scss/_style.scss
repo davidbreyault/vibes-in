@@ -39,6 +39,7 @@
 }
   
 body {
+    position: relative;
     background-color: $primary;
     color: $text-primary;
     line-height: 1.5;
@@ -52,7 +53,7 @@ h1 {
     font-weight: 400;
     font-size: 5rem;
     line-height: 1;
-    color: rgba(245, 232, 232, 0.947);
+    color: #fff;
     text-align: center;
     animation: fade-in 3s ease-in-out 0.5s both;
     @include sm {
@@ -60,6 +61,23 @@ h1 {
     }
     @include md {
         font-size: 10rem;
+    }
+}
+
+h2 {
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 400;
+    font-size: 3rem;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    animation: fade-in 3s ease-in-out 0.5s both;
+    @include sm {
+        font-size: 4rem;
+    }
+    @include md {
+        font-size: 6rem;
     }
 }
 
@@ -110,7 +128,7 @@ input {
 
 .header {
     padding: 2rem 0;
-    background-color: $primary-darker-1;
+    background-color: transparent;
     font-weight: 600;
     .container {
         @include flex-layout;
@@ -206,35 +224,134 @@ input {
 
 .hero {
     background-color: $primary-darker-1;
-    min-height: calc(100vh - 6.8rem);
-    @include sm {
-        min-height: calc(100vh - 8.4rem);
-    }
+    min-height: 100vh;
 }
 
 .hero__landing {
+    position: relative;
     background-image: linear-gradient(
         rgba(17, 19, 26, 0.8) 0%,
         rgba(17, 19, 26, 0.302) 50%,
         rgba(29, 32, 41, 0.88) 100%,
     ),
-    url("../img/bg-bokeh.jpg");
+    url("../img/bokeh.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    overflow: hidden;
+    .circle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 8rem;
+        height: 8rem;
+        border-radius: 50%;
+        background-color: $secondary-lighter;
+        mix-blend-mode: difference;
+        animation: fade 6s;
+    }
     .container {
         @include flex-layout(column, center, center);
-        min-height: calc(100vh - 19rem);
-        mix-blend-mode: color-dodge;
+        position: relative;
+        min-height: 100vh;
         p {
             margin-top: 2rem;
             color: rgba(224, 233, 235, 0.947);
             font-size: 1.5rem;
             font-weight: 200;
             text-align: center;
+            animation: fade-in 3s ease-in-out 0.5s both;
             @include sm {
                 margin-top: 5rem;
                 font-size: 2rem;
+            }
+        }
+    }
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+.hero__bloomtown {
+    background-image: linear-gradient(
+        rgba(17, 19, 26, 0.9) 0%,
+        rgba(17, 19, 26, 0.5) 50%,
+        rgba(29, 32, 41, 0.9) 100%,
+    ),
+    url("../img/festival.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    .container {
+        @include flex-layout(column, center, center);
+        min-height: 100vh;
+    }
+    .buttons {
+        @include flex-layout(column, space-between, center);
+        margin-top: 3rem;
+        @include sm {
+            @include flex-layout(row, space-between, center);
+        }
+    }
+    .cta {
+        color: #fff;
+        padding: 1.5rem 3rem;
+        background-color: rgba(0, 0, 0, .5);
+        border-radius: 2em;
+        text-decoration: none;
+        &:hover {
+            background-color: rgba(255, 255, 255, .85);
+            color: #000;
+            transition: all 0.3s ease-in-out;
+        }
+        &:first-child {
+            margin-bottom: 2rem;
+            @include sm {
+                margin-right: 2rem;
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.hero__covers {
+    overflow: hidden;
+    .container {
+        @include flex-layout(column, center, center);
+        min-height: 100vh;
+    }
+    h2 {
+        font-weight: lighter;
+        margin-bottom: 2rem;
+    }
+    .imgcovers {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        img {
+            display: block;
+            max-width: 10rem;
+            height: auto;
+            object-fit: cover;
+            object-position: center;
+            @include md {
+                max-width: 20rem;
+            }
+            @include xl {
+                max-width: 26rem;
             }
         }
     }
@@ -762,6 +879,9 @@ input {
         place-items: center;
         gap: 1rem;
         margin-bottom: 2rem;
+        img {
+            animation: fade-in 1s ease-in-out both;
+        }
     }
     @include loadingSpinner(lighten($primary, 5%), 0);
 }
