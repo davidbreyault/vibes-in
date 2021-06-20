@@ -37,6 +37,10 @@
             url('../fonts/montserrat-v15-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
             url('../fonts/montserrat-v15-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+
+:root {
+    --pseudo-width: 0%;
+}
   
 body {
     position: relative;
@@ -267,6 +271,9 @@ input {
             }
         }
     }
+    .title {
+        @include flex-layout(row, center, baseline);
+    }
 }
 
 @keyframes fade {
@@ -387,6 +394,60 @@ input {
     &:hover {
         background-color: #fff;
         transform: scale(1.1);
+    }
+}
+
+.bars {
+    @include flex-layout(row, center, center);
+    margin-left: 2rem;
+}
+.bar {
+    width: .5rem;
+    height: 5rem;
+    margin-right: 0.15rem;
+    background: linear-gradient(
+        0deg, darken($text-primary, 16%) 0%,
+        $text-primary 45%,
+        rgb(255, 255, 255, 0.75) 100%
+    );
+    mix-blend-mode: hard-light;
+    transform-origin: bottom;
+    &:nth-child(1) {
+        animation: up-and-down-bis 1s ease-in-out 0.7s both alternate infinite;
+    }
+    &:nth-child(2) {
+        animation: up-and-down-bis 0.6s ease-in-out 0.15s both alternate infinite;
+    }
+    &:nth-child(3) {
+        animation: up-and-down 1s ease-in-out 0.65s both alternate infinite;
+    }
+    &:nth-child(4) {
+        animation: up-and-down-bis 0.8s ease-in-out 0.3s both alternate infinite;
+    }
+    &:nth-child(5) {
+        animation: up-and-down 1s ease-in-out 0.9s both alternate infinite;
+    }
+    @include lg {
+        width: .65rem;
+        height: 7.2rem;
+        margin-right: 0.3rem;
+    }
+}
+
+@keyframes up-and-down {
+    from {
+        transform: scaleY(0.3);
+    }
+    to {
+        transform: scaleY(0.6);
+    }
+}
+@keyframes up-and-down-bis {
+    from {
+        transform: scaleY(0.2);
+    }
+    to {
+        transform: scaleY(1);
     }
 }
 
@@ -518,7 +579,7 @@ input {
 }
 
 .results {
-    min-height: calc(100vh - 26.4rem);
+    min-height: calc(100vh - 40rem);
     p {
         font-size: 1.2rem;
         @include lg {
@@ -871,6 +932,34 @@ input {
         }
         p:not(:last-of-type) {
             border-bottom: 1px solid $primary-lighter-1;
+        }
+        .rating {
+            @include flex-layout(row, flex-start, center);
+            border-top: 1px solid $primary-lighter-1;
+            .star {
+                width: 1.7rem;
+                height: 1.7rem;
+                margin-left: 0.5rem;
+                background-color: $text-primary;
+                clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+                @include md {
+                    width: 2.5rem;
+                    height: 2.5rem;
+                }
+            }
+            .decimal {
+                position: relative;
+                overflow: hidden;
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: var(--pseudo-width);
+                    height: 100%;
+                    background-color: $secondary-lighter;
+                }
+            }
         }
     }
     .covers {
