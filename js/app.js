@@ -31,6 +31,18 @@ let offset = 0;
 let cumulOffset = 0;
 let covers;
 
+// Transition du span du label lors du focus de l'input de recherche
+searchInputElt.addEventListener('focus', () => {
+    searchSpanElt.classList.add('translate');
+})
+
+// Transition du span du label lors de la perte du focus seulement si l'input est vide
+searchInputElt.addEventListener('blur', () => {
+    searchSpanElt.classList.remove('translate');
+    manageClass(searchSpanElt);
+})
+
+// Gestion du mouvement du span du label de l'input de recherche
 function manageClass(element) {
     // Si le second paramètre est à true, ajoute cette classe, si non, supprime la.
     element.classList.toggle('translate', searchInputElt.value.length > 0);
@@ -49,17 +61,6 @@ dropdownListItems.forEach((option) => {
     }) 
 })
 
-// Transition du span lors du focus de l'input de recherche
-searchInputElt.addEventListener('focus', () => {
-    searchSpanElt.classList.add('translate');
-})
-
-// Transition du span lors de la perte du focus seulement si l'input est vide
-searchInputElt.addEventListener('blur', () => {
-    searchSpanElt.classList.remove('translate');
-    manageClass(searchSpanElt);
-})
-
 // Assignation de la variable parameter pour customiser l'URL de la future requête 
 dropdownListItems.forEach((item) => {
     item.addEventListener('click', () => {
@@ -70,20 +71,20 @@ dropdownListItems.forEach((item) => {
 
 // Contrôle la longueur de la chaine de caractères
 function limitCharacterLength(string, stringLength) {
-    //let stringLength = 38;
     let newString = string.length > stringLength 
         ? string.slice(0, stringLength - 3).concat('...')
         : string;
     return newString;
 }
 
-// Enlève le scroll sur le body si la modale est ouverte
+// Interdiction du scroll sur le body si la modale est ouverte
 function scrollManager() {
     modalElt.classList.contains("open")
         ? (document.querySelector('body').style.overflow = "hidden")
         : (document.querySelector('body').style.overflow = "scroll");
 }
 
+// Création d'une ligne de données
 function createList(id, artist, title, album, mbid) {
     // Création des éléments
     let newId = document.createElement('p');
@@ -101,11 +102,11 @@ function createList(id, artist, title, album, mbid) {
     let newAlbum = document.createElement('p');
     let newAlbumImg = document.createElement('img');
     let newAlbumSpan = document.createElement('span');
-    // Boutton
+    // bouton
     let newButton = document.createElement('button');
     let newImgButton = document.createElement('img');
     let newLine = document.createElement('li');
-    let newMbid = mbid;
+    let newTitleMbid = mbid;
     // Distribution des classes
     newId.classList.add('results-list__item--id');
     newArtist.classList.add('results-list__item--artist');
@@ -138,19 +139,21 @@ function createList(id, artist, title, album, mbid) {
     newTitle.appendChild(newTitleSpan);
     newAlbum.appendChild(newAlbumImg);
     newAlbum.appendChild(newAlbumSpan);
-    // Boutton
+    // bouton
     newButton.appendChild(newImgButton);
     // Lors du clique sur le bouton
     newButton.addEventListener('click', () => {
-        console.log(id + ' mbid :  ' + newMbid);
+        //console.log(id + ' mbid :  ' + newTitleMbid);
         covers = 0;
         // Ouverture de la fenêtre modale
         modalElt.classList.add('open');
+        // Scroll uniquement dans la modale
         scrollManager();
-        // Utilisation du innerHTML dans ce cas précis, afin de vider intégralement l'élément de son son contenu
+        // Utilisation du innerHTML dans ce cas précis, afin de vider l'intégrité du contenu de l'élément
         coversZoneElt.innerHTML = '';
-        // Lancement d'une nouvelle requête pour récupérer les infos spécifiques et associées au bouton
-        lookupRequest(newMbid);
+        // Lancement d'une nouvelle requête pour récupérer les infos spécifiques et associées au titre en question
+        lookupRequest(newTitleMbid);
+        // Lancement de la roulette de chargement
         createSpinnerLoader(coversZoneElt);
     })
     // Ajout des éléments
@@ -175,7 +178,7 @@ function createShowMoreButton() {
     let showMoreButton = document.createElement('button');
     showMoreButton.textContent = 'More results';
     showMoreButton.classList.add('show-more-button');
-    // Lors du clique sur le nouveau boutton
+    // Lors du clique sur le nouveau bouton
     showMoreButton.addEventListener('click', (e) => {
         // Supression de ce dernier
         e.target.remove();
@@ -185,17 +188,18 @@ function createShowMoreButton() {
     resultsList.appendChild(showMoreButton);
 }
 
+// Pour chaque nouvelle recherche
 formElt.addEventListener('submit', (e) => {
     // Empêche le comportement par défault de la soumission d'un formulaire
     e.preventDefault();
-    // Réinitialise offset à zéro à chaque nouvelle recherche
+    // Réinitialise le offset à zéro à chaque nouvelle recherche
     offset = 0;
     cumulOffset = 0;
     covers = 0;
     // Si l'utilisateur a rentré plusieurs mots, englobe la valeur de l'input entre guillemets, afin de filtrer plus précisément les résultats de la requête
     let findSpaceRegex = /\W/;
     let inputValue = findSpaceRegex.test(searchInputElt.value) ? '\"' + searchInputElt.value + '\"' : searchInputElt.value;
-    // Si le champs input n'est pas vide
+    // Si le champs de recherche n'est pas vide
     if (inputValue.length > 0) {
         // Si l'utilisateur a sélectionné un type de recherche
         if (selectSpanElt.hasAttribute('data-value')) {
@@ -203,7 +207,7 @@ formElt.addEventListener('submit', (e) => {
             errorInfoElt.textContent = '';
             resultCounterElt.style.display = 'block';
             resultInfoElt.style.display = 'none';
-            // Vide resultList a chaque soumission de formulaire pour afficher les nouveaux résultats de la requête
+            // Vide 'resultList' a chaque soumission de formulaire pour afficher les nouveaux résultats de la requête
             while (resultsList.hasChildNodes()) {
                 resultsList.firstChild.remove();
             }
@@ -219,6 +223,7 @@ formElt.addEventListener('submit', (e) => {
     }
 })
 
+// GET Search Request : /<ENTITY_TYPE>?query=<QUERY>&limit=<LIMIT>&offset=<OFFSET>
 function searchRequest(parameter, value) {
     let request = new XMLHttpRequest();
     // Construction de l'url en fonction de ce que recherche l'utilisateur
@@ -237,7 +242,7 @@ function searchRequest(parameter, value) {
                 }
                 // Conversion des données JSON en données interprétables par le Javascript
                 let response = JSON.parse(request.response);
-                console.log(response);
+                //console.log(response);
                 // Affiche le nombre de résultats trouvés
                 let plurial = response.count > 1 ? 's' : '';
                 resultCounterElt.textContent = response.count + ' result' + plurial;
@@ -261,7 +266,7 @@ function searchRequest(parameter, value) {
                     cumulOffset += response.recordings.length;
                     // S'il reste encore des résultat à afficher
                     if (cumulOffset < response.count) {
-                        // Création d'un boutton pour afficher plus de résultats
+                        // Création d'un bouton pour afficher plus de résultats
                         createShowMoreButton();
                         // Incrémentation de l'offset
                         offset = response.offset + 50;
@@ -269,7 +274,7 @@ function searchRequest(parameter, value) {
                         document.querySelector('.show-more-button').addEventListener('click', () => {
                             // Laisse passer une seconde pour bien apercevoir le spinner
                             setTimeout(() => {
-                                // Envoie de la nouvelle requête pour récupérer les données suivantes
+                                // Récursivité : envoie de la nouvelle requête pour récupérer les données suivantes 
                                 searchRequest(parameter, value);
                             }, 1000);
                         })
@@ -282,6 +287,7 @@ function searchRequest(parameter, value) {
     request.send();
 }
 
+// GET lookup Request : /<ENTITY_TYPE>/<MBID>?inc=<INC>
 function lookupRequest(mbid) {
     let request = new XMLHttpRequest();
     request.addEventListener('readystatechange', () => {
@@ -289,7 +295,7 @@ function lookupRequest(mbid) {
             if (request.status === 200) {
                 // Conversion des données JSON en données interprétables par le Javascript
                 let response = JSON.parse(request.response);
-                console.log(response);
+                //console.log(response);
                 modalInfoHeader.textContent = response['artist-credit'][0].name + ' - ' + response.title;
                 modalInfoTitle.textContent = response.title;
                 modalInfoArtist.textContent = response['artist-credit'][0].name;
@@ -320,6 +326,10 @@ function lookupRequest(mbid) {
                 modalInfoGenre.textContent = genres;
                 // Traitement et affichage de la durée
                 modalInfoLength.textContent = response.length === null ? ' /' : convertLengthTitle(response.length);
+                // Traitement des notes
+                response.rating.value !== null
+                    ? ratingSystem(response.rating.value)
+                    : hideRatings();
                 // Récupération des id de tout les albums
                 response.releases.forEach((album) => {
                     // Lancement de la requête pour récupérer les covers
@@ -353,13 +363,14 @@ function convertLengthTitle(number) {
     return minutes + ' : ' + seconds;
 }
 
-// Création dynamique des images dans le DOM
+// Affichage dynamique des jaquettes d'album dans le DOM
 function printCovers(url) {
     if (url === undefined) {
         return;
     } else {
         let newCover = document.createElement('img');
         newCover.src = url;
+        newCover.alt = 'Album cover';
         coversZoneElt.appendChild(newCover);
         covers++;
     }
@@ -371,18 +382,18 @@ closeModalButton.addEventListener('click', () => {
     scrollManager();
 })
 
+// GET Covers Request
 function lookupRequestCover(mbid) {
     let request = new XMLHttpRequest();
     request.addEventListener('readystatechange', () => {
         if (request.readyState === XMLHttpRequest.DONE) {
             if (request.status === 200) {
+                // Conversion des données JSON en données interprétables par le Javascript
+                let response = JSON.parse(request.response);
                 // Suppression du loader de chargement s'il existe
                 if (document.querySelector('.loader') !== null) {
                     document.querySelector('.loader').remove();
                 }
-                // Conversion des données JSON en données interprétables par le Javascript
-                let response = JSON.parse(request.response);
-                console.log(response);
                 // Pour chaque images présente dans le tableau
                 response.images.forEach(item => {
                     // Affiche l'image en question
@@ -401,5 +412,56 @@ function lookupRequestCover(mbid) {
     });
     request.open('GET', `http://coverartarchive.org/release/${mbid}`);
     request.send(); 
+}
+
+// Cache les étoiles si la note n'est pas définie
+function hideRatings() {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((item) => {
+        item.style.display = 'none';
+    });
+}
+
+// Gestion des étoiles en fonction de la note
+function ratingSystem(rating) {
+    const stars = document.querySelectorAll('.star');
+    const root = document.querySelector(':root');
+    let regex = /^(\d)\.(\d{1,})$/;
+
+    // Affichage des étoiles
+    stars.forEach((item) => {
+        item.style.display = 'block';
+        item.classList.remove('decimal');
+    });
+
+    // Remplissage des étoiles
+    function colorStars(note) {
+        stars.forEach((item, index) => {
+            // Si l'unité de la note est supérieure ou égale à son étoile correspondante
+            if (note >= index + 1) {
+                // Coloration de l'étoile
+                item.style.backgroundColor = '#ff4b23';
+            }
+        });
+    }
+
+    // Si la note est un nombre entier
+    if (!regex.test(rating)) {
+        // Coloration des étoiles
+        colorStars(rating);
+    } else {
+        // Séparation de l'entier et du décimal
+        let ratingValues = rating.toString().match(regex);
+        let integer = ratingValues[1];
+        let decimal = ratingValues[2];
+        // Coloration des étoiles pleines
+        colorStars(integer);
+        // Ajout de la classe 'décimal' sur l'étoile qui ne doit pas être remplie entièrement
+        stars[integer].classList.add('decimal');
+        // Attribution de la largeur à coloriser
+        let widthValue = decimal < 10 ? decimal * 10 : decimal;
+        // Changement dynamique du remplissage de l'étoile
+        root.style.setProperty('--pseudo-width', widthValue + '%');
+    }
 }
 
