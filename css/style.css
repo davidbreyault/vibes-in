@@ -170,6 +170,10 @@ address {
   src: local(""), url("../fonts/montserrat-v15-latin-700.woff2") format("woff2"), url("../fonts/montserrat-v15-latin-700.woff") format("woff");
   /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+:root {
+  --pseudo-width: 0%;
+}
+
 body {
   position: relative;
   background-color: #2d2f33;
@@ -424,6 +428,12 @@ input {
     font-size: 2rem;
   }
 }
+.hero__landing .title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
+}
 
 @keyframes fade {
   0% {
@@ -562,6 +572,61 @@ input {
   transform: scale(1.1);
 }
 
+.bars {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2rem;
+}
+
+.bar {
+  width: 0.5rem;
+  height: 5rem;
+  margin-right: 0.15rem;
+  background: linear-gradient(0deg, #9da1af 0%, #caccd4 45%, rgba(255, 255, 255, 0.75) 100%);
+  mix-blend-mode: hard-light;
+  transform-origin: bottom;
+}
+.bar:nth-child(1) {
+  animation: up-and-down-bis 1s ease-in-out 0.7s both alternate infinite;
+}
+.bar:nth-child(2) {
+  animation: up-and-down-bis 0.6s ease-in-out 0.15s both alternate infinite;
+}
+.bar:nth-child(3) {
+  animation: up-and-down 1s ease-in-out 0.65s both alternate infinite;
+}
+.bar:nth-child(4) {
+  animation: up-and-down-bis 0.8s ease-in-out 0.3s both alternate infinite;
+}
+.bar:nth-child(5) {
+  animation: up-and-down 1s ease-in-out 0.9s both alternate infinite;
+}
+@media screen and (min-width: 62em) {
+  .bar {
+    width: 0.65rem;
+    height: 7.2rem;
+    margin-right: 0.3rem;
+  }
+}
+
+@keyframes up-and-down {
+  from {
+    transform: scaleY(0.3);
+  }
+  to {
+    transform: scaleY(0.6);
+  }
+}
+@keyframes up-and-down-bis {
+  from {
+    transform: scaleY(0.2);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
 .glide__bullet:not(:last-child) {
   margin-right: 0.3rem;
 }
@@ -693,7 +758,7 @@ input {
 }
 
 .results {
-  min-height: calc(100vh - 26.4rem);
+  min-height: calc(100vh - 40rem);
 }
 .results p {
   font-size: 1.2rem;
@@ -1156,6 +1221,39 @@ input {
 }
 .modal__infos p:not(:last-of-type) {
   border-bottom: 1px solid #505158;
+}
+.modal__infos .rating {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border-top: 1px solid #505158;
+}
+.modal__infos .rating .star {
+  width: 1.7rem;
+  height: 1.7rem;
+  margin-left: 0.5rem;
+  background-color: #caccd4;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+@media screen and (min-width: 48em) {
+  .modal__infos .rating .star {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+.modal__infos .rating .decimal {
+  position: relative;
+  overflow: hidden;
+}
+.modal__infos .rating .decimal::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--pseudo-width);
+  height: 100%;
+  background-color: #ff4b23;
 }
 .modal .covers {
   display: grid;
