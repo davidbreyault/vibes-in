@@ -354,11 +354,17 @@ input {
             height: auto;
             object-fit: cover;
             object-position: center;
+            @include sm {
+                max-width: 15rem;
+            }
             @include md {
+                max-width: 17rem;
+            }
+            @include lg {
                 max-width: 20rem;
             }
             @include xl {
-                max-width: 26rem;
+                max-width: 23rem;
             }
         }
     }
@@ -394,6 +400,27 @@ input {
     &:hover {
         background-color: #fff;
         transform: scale(1.1);
+    }
+}
+
+.glide__arrows {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    button {
+        width: 4rem;
+        height: 4rem;
+        margin: 0 1.6rem;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        opacity: .4;
+        transition: all 0.3s ease-in-out;
+        &:hover {
+            opacity: .8;
+        }
     }
 }
 

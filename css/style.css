@@ -526,14 +526,24 @@ input {
   object-fit: cover;
   object-position: center;
 }
+@media screen and (min-width: 36em) {
+  .hero__covers .imgcovers img {
+    max-width: 15rem;
+  }
+}
 @media screen and (min-width: 48em) {
+  .hero__covers .imgcovers img {
+    max-width: 17rem;
+  }
+}
+@media screen and (min-width: 62em) {
   .hero__covers .imgcovers img {
     max-width: 20rem;
   }
 }
 @media screen and (min-width: 75em) {
   .hero__covers .imgcovers img {
-    max-width: 26rem;
+    max-width: 23rem;
   }
 }
 
@@ -570,6 +580,27 @@ input {
 .glide__bullet:hover {
   background-color: #fff;
   transform: scale(1.1);
+}
+
+.glide__arrows {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.glide__arrows button {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 1.6rem;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  opacity: 0.4;
+  transition: all 0.3s ease-in-out;
+}
+.glide__arrows button:hover {
+  opacity: 0.8;
 }
 
 .bars {
