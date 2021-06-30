@@ -339,7 +339,7 @@ function lookupRequest(mbid) {
                     if (covers === 0) {
                         coversZoneElt.textContent = 'Aucune pochette d\'album disponible.'
                     }
-                }, 3000);
+                }, 5000);
             }
         }
     })
@@ -464,4 +464,3 @@ function ratingSystem(rating) {
         root.style.setProperty('--pseudo-width', widthValue + '%');
     }
 }
-
