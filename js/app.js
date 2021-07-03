@@ -231,8 +231,8 @@ function searchRequest(parameter, value) {
     let request = new XMLHttpRequest();
     // Construction de l'url en fonction de ce que recherche l'utilisateur
     let URL = selectSpanElt.getAttribute('data-value') !== 'all'
-        ? `http://musicbrainz.org/ws/2/recording/?query=${parameter}:${value}&fmt=json&limit=50&offset=${offset}`
-        : `http://musicbrainz.org/ws/2/recording/?query=release:${value}%20OR%20artist:${value}%20OR%20recording:${value}&fmt=json&limit=50&offset=${offset}`;
+        ? `https://musicbrainz.org/ws/2/recording/?query=${parameter}:${value}&fmt=json&limit=50&offset=${offset}`
+        : `https://musicbrainz.org/ws/2/recording/?query=release:${value}%20OR%20artist:${value}%20OR%20recording:${value}&fmt=json&limit=50&offset=${offset}`;
     // Lorsque l'état de chargement du protocole change
     request.addEventListener('readystatechange', () => {
         // Si l'opération de récupération est terminée
@@ -301,7 +301,7 @@ function lookupRequest(mbid, callback) {
             }
         }
     })
-    request.open('GET', `http://musicbrainz.org/ws/2/recording/${mbid}?inc=artists+releases+ratings+release-groups+genres&fmt=json`);
+    request.open('GET', `https://musicbrainz.org/ws/2/recording/${mbid}?inc=artists+releases+ratings+release-groups+genres&fmt=json`);
     request.send(); 
 }
 
@@ -425,7 +425,7 @@ function lookupRequestCover(mbid) {
             }
         }
     });
-    request.open('GET', `http://coverartarchive.org/release/${mbid}`);
+    request.open('GET', `https://coverartarchive.org/release/${mbid}`);
     request.send(); 
 }
 
