@@ -465,22 +465,15 @@ input {
 }
 .hero__bloomtown .buttons {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   margin-top: 3rem;
 }
-@media screen and (min-width: 36em) {
-  .hero__bloomtown .buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
 .hero__bloomtown .cta {
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
   color: #fff;
-  padding: 1.5rem 3rem;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 2em;
   text-decoration: none;
@@ -490,13 +483,10 @@ input {
   color: #000;
   transition: all 0.3s ease-in-out;
 }
-.hero__bloomtown .cta:first-child {
-  margin-bottom: 2rem;
-}
 @media screen and (min-width: 36em) {
-  .hero__bloomtown .cta:first-child {
-    margin-right: 2rem;
-    margin-bottom: 0;
+  .hero__bloomtown .cta {
+    padding: 1.5rem 3rem;
+    font-size: 1.6rem;
   }
 }
 
@@ -583,24 +573,29 @@ input {
 }
 
 .glide__arrows {
-  position: absolute;
-  top: 50%;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+  display: none;
 }
-.glide__arrows button {
-  width: 4rem;
-  height: 4rem;
-  margin: 0 1.6rem;
-  padding: 0;
-  border: none;
-  background-color: transparent;
-  opacity: 0.4;
-  transition: all 0.3s ease-in-out;
-}
-.glide__arrows button:hover {
-  opacity: 0.8;
+@media screen and (min-width: 36em) {
+  .glide__arrows {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .glide__arrows button {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 1.6rem;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    opacity: 0.4;
+    transition: all 0.3s ease-in-out;
+  }
+  .glide__arrows button:hover {
+    opacity: 0.8;
+  }
 }
 
 .bars {

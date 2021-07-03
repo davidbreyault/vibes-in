@@ -307,15 +307,13 @@ input {
         min-height: 100vh;
     }
     .buttons {
-        @include flex-layout(column, space-between, center);
+        @include flex-layout(row, space-between, center);
         margin-top: 3rem;
-        @include sm {
-            @include flex-layout(row, space-between, center);
-        }
     }
     .cta {
+        font-size: 1.2rem;
+        padding: 1rem 2rem;
         color: #fff;
-        padding: 1.5rem 3rem;
         background-color: rgba(0, 0, 0, .5);
         border-radius: 2em;
         text-decoration: none;
@@ -324,12 +322,9 @@ input {
             color: #000;
             transition: all 0.3s ease-in-out;
         }
-        &:first-child {
-            margin-bottom: 2rem;
-            @include sm {
-                margin-right: 2rem;
-                margin-bottom: 0;
-            }
+        @include sm {
+            padding: 1.5rem 3rem;
+            font-size: 1.6rem;
         }
     }
 }
@@ -404,22 +399,25 @@ input {
 }
 
 .glide__arrows {
-    position: absolute;
-    top: 50%;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    button {
-        width: 4rem;
-        height: 4rem;
-        margin: 0 1.6rem;
-        padding: 0;
-        border: none;
-        background-color: transparent;
-        opacity: .4;
-        transition: all 0.3s ease-in-out;
-        &:hover {
-            opacity: .8;
+    display: none;
+    @include sm {
+        position: absolute;
+        top: 50%;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        button {
+            width: 4rem;
+            height: 4rem;
+            margin: 0 1.6rem;
+            padding: 0;
+            border: none;
+            background-color: transparent;
+            opacity: .4;
+            transition: all 0.3s ease-in-out;
+            &:hover {
+                opacity: .8;
+            }
         }
     }
 }
