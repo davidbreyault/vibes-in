@@ -25,6 +25,7 @@ const modalInfoYear = document.querySelector('.modal__infos .year');
 const modalInfoCountry = document.querySelector('.modal__infos .country');
 const modalInfoLength = document.querySelector('.modal__infos .length');
 const coversZoneElt = document.querySelector('.covers');
+const starsRating = document.querySelectorAll('.star');
 
 let parameter = null;
 let offset = 0;
@@ -79,9 +80,9 @@ function limitCharacterLength(string, stringLength) {
 
 // Interdiction du scroll sur le body si la modale est ouverte
 function scrollManager() {
-    modalElt.classList.contains("open")
-        ? (document.querySelector('body').style.overflow = "hidden")
-        : (document.querySelector('body').style.overflow = "scroll");
+    modalElt.classList.contains('open')
+        ? document.body.style.overflow = 'hidden'
+        : document.body.style.overflow = 'scroll';
 }
 
 // Création d'une ligne de données
@@ -152,7 +153,7 @@ function createList(id, artist, title, album, mbid) {
         // Utilisation du innerHTML dans ce cas précis, afin de vider l'intégrité du contenu de l'élément
         coversZoneElt.innerHTML = '';
         // Lancement d'une nouvelle requête pour récupérer les infos spécifiques et associées au titre en question
-        lookupRequest(newTitleMbid);
+        lookupRequest(newTitleMbid, printDataInModal);
         // Lancement de la roulette de chargement
         createSpinnerLoader(coversZoneElt);
     })
@@ -198,7 +199,9 @@ formElt.addEventListener('submit', (e) => {
     covers = 0;
     // Si l'utilisateur a rentré plusieurs mots, englobe la valeur de l'input entre guillemets, afin de filtrer plus précisément les résultats de la requête
     let findSpaceRegex = /\W/;
-    let inputValue = findSpaceRegex.test(searchInputElt.value) ? '\"' + searchInputElt.value + '\"' : searchInputElt.value;
+    let inputValue = findSpaceRegex.test(searchInputElt.value) 
+        ? '\"' + searchInputElt.value + '\"' 
+        : searchInputElt.value;
     // Si le champs de recherche n'est pas vide
     if (inputValue.length > 0) {
         // Si l'utilisateur a sélectionné un type de recherche
@@ -242,7 +245,6 @@ function searchRequest(parameter, value) {
                 }
                 // Conversion des données JSON en données interprétables par le Javascript
                 let response = JSON.parse(request.response);
-                //console.log(response);
                 // Affiche le nombre de résultats trouvés
                 let plurial = response.count > 1 ? 's' : '';
                 resultCounterElt.textContent = response.count + ' result' + plurial;
@@ -253,7 +255,7 @@ function searchRequest(parameter, value) {
                     resultInfoElt.textContent = 'There is no result for your request.';
                 } else {
                     // Si non lance la fonction createList pour chaque éléments du tableau recordings 
-                    response.recordings.forEach((element, index) => {
+                    response.recordings.map((element, index) => {
                         createList(
                             response.offset + index + 1,
                             limitCharacterLength(element['artist-credit'][0].name, 25),
@@ -288,58 +290,14 @@ function searchRequest(parameter, value) {
 }
 
 // GET lookup Request : /<ENTITY_TYPE>/<MBID>?inc=<INC>
-function lookupRequest(mbid) {
+function lookupRequest(mbid, callback) {
     let request = new XMLHttpRequest();
     request.addEventListener('readystatechange', () => {
         if (request.readyState === XMLHttpRequest.DONE) {
             if (request.status === 200) {
                 // Conversion des données JSON en données interprétables par le Javascript
                 let response = JSON.parse(request.response);
-                //console.log(response);
-                modalInfoHeader.textContent = response['artist-credit'][0].name + ' - ' + response.title;
-                modalInfoTitle.textContent = response.title;
-                modalInfoArtist.textContent = response['artist-credit'][0].name;
-                // Affichage de l'album
-                response.releases[0].title
-                    ? modalInfoAlbum.textContent = response.releases[0].title
-                    : ' /';
-                // Affichage du pays d'origine
-                response.releases[0].country
-                    ? modalInfoCountry.textContent = response.releases[0].country
-                    : ' /';
-                // Affichage de la date
-                response['first-release-date'] 
-                    ? modalInfoYear.textContent = response['first-release-date'].slice(0, 4) 
-                    : ' /';
-                // Affichage des genres s'ils sont renseignés
-                let genres = '';
-                let dataGenres = response['artist-credit'][0].artist.genres;
-                if (dataGenres.length > 0) {
-                    dataGenres.forEach((element) => {
-                        genres += (dataGenres.indexOf(element) === dataGenres.length - 1)
-                            ? element.name.charAt(0).toUpperCase() + element.name.slice(1)
-                            : element.name.charAt(0).toUpperCase() + element.name.slice(1).concat(', ');
-                    })
-                } else {
-                    genres = ' /';
-                }
-                modalInfoGenre.textContent = genres;
-                // Traitement et affichage de la durée
-                modalInfoLength.textContent = response.length === null ? ' /' : convertLengthTitle(response.length);
-                // Traitement des notes
-                response.rating.value !== null
-                    ? ratingSystem(response.rating.value)
-                    : hideRatings();
-                // Récupération des id de tout les albums
-                response.releases.forEach((album) => {
-                    // Lancement de la requête pour récupérer les covers
-                    lookupRequestCover(album.id);
-                })
-                setTimeout(() => {
-                    if (covers === 0) {
-                        coversZoneElt.textContent = 'Aucune pochette d\'album disponible.'
-                    }
-                }, 5000);
+                callback(response);
             }
         }
     })
@@ -347,15 +305,72 @@ function lookupRequest(mbid) {
     request.send(); 
 }
 
-// Traitement de la durée
+// Fonction de callback qui sera executée suite au succès de la lookup Request
+function printDataInModal(response) {
+    modalInfoHeader.textContent = response['artist-credit'][0].name + ' - ' + response.title;
+    modalInfoTitle.textContent = response.title;
+    modalInfoArtist.textContent = response['artist-credit'][0].name;
+    // Affichage de l'album
+    const {releases} = response;
+    let listAlbum = '';
+    if (releases.length > 0) {
+        releases.map(element => {
+            listAlbum += (releases.indexOf(element) === releases.length - 1)
+                ? element.title
+                : element.title.concat('   -   ');
+        })
+    } else {
+        listAlbum = ' /';
+    }
+    modalInfoAlbum.textContent = listAlbum;
+    // Affichage du pays d'origine
+    response.releases[0].country
+        ? modalInfoCountry.textContent = response.releases[0].country
+        : ' /';
+    // Affichage de la date
+    response['first-release-date'] 
+        ? modalInfoYear.textContent = response['first-release-date'].slice(0, 4) 
+        : ' /';
+    // Affichage des genres s'ils sont renseignés
+    let genres = '';
+    let dataGenres = response['artist-credit'][0].artist.genres;
+    if (dataGenres.length > 0) {
+        dataGenres.map((element) => {
+            genres += (dataGenres.indexOf(element) === dataGenres.length - 1)
+                ? element.name.charAt(0).toUpperCase() + element.name.slice(1)
+                : element.name.charAt(0).toUpperCase() + element.name.slice(1).concat(', ');
+        })
+    } else {
+        genres = ' /';
+    }
+    modalInfoGenre.textContent = genres;
+    // Traitement et affichage de la durée
+    modalInfoLength.textContent = response.length === null ? ' /' : convertLengthTitle(response.length);
+    // Traitement des notes
+    response.rating.value !== null
+        ? ratingSystem(response.rating.value)
+        : hideRatings();
+    // Récupération des id de tout les albums
+    response.releases.map(album => {
+        // Lancement de la requête pour récupérer les covers
+        lookupRequestCover(album.id);
+    })
+    setTimeout(() => {
+        if (covers === 0) {
+            coversZoneElt.textContent = 'Aucune pochette d\'album disponible.'
+        }
+    }, 5000);
+}
+
+// Transformation de la durée au format 'MM:SS'
 function convertLengthTitle(number) {
-    // Transformation (au format 'MM:SS') de la durée exprimée en millisecondes
+    // Convertion en minute de la durée exprimée en milliseconde
     let time = (Math.floor(number / 1000) / 60).toString();
     // Trouve au moins un chiffre, puis un point, puis un ou plusieurs chiffres 
     let regex = /^(\d{1,})\.(\d{1,})$/;
     // Regroupe minutes et secondes
     let groupMinutesSeconds = time.match(regex);
-    // Récupération des minutes dans le tableau 'arrayGroup'
+    // Récupération des minutes dans le tableau 'groupMinutesSeconds'
     let minutes = groupMinutesSeconds[1].padStart(2, '0');
     // Traitement des secondes
     let seconds = (Math.round(number / 1000) % 60).toString().padStart(2, '0');
@@ -395,7 +410,7 @@ function lookupRequestCover(mbid) {
                     document.querySelector('.loader').remove();
                 }
                 // Pour chaque images présente dans le tableau
-                response.images.forEach(item => {
+                response.images.map(item => {
                     // Affiche l'image en question
                     if (item.thumbnails['250']) {
                         printCovers(item.thumbnails['250']);
@@ -414,36 +429,18 @@ function lookupRequestCover(mbid) {
     request.send(); 
 }
 
-// Cache les étoiles si la note n'est pas définie
-function hideRatings() {
-    const stars = document.querySelectorAll('.star');
-    stars.forEach((item) => {
-        item.style.display = 'none';
-    });
-}
+
 
 // Gestion des étoiles en fonction de la note
 function ratingSystem(rating) {
-    const stars = document.querySelectorAll('.star');
     const root = document.querySelector(':root');
     let regex = /^(\d)\.(\d{1,})$/;
 
     // Affichage des étoiles
-    stars.forEach((item) => {
-        item.style.display = 'block';
-        item.classList.remove('decimal');
+    starsRating.forEach(star => {
+        star.style.display = 'block';
+        star.classList.remove('decimal');
     });
-
-    // Remplissage des étoiles
-    function colorStars(note) {
-        stars.forEach((item, index) => {
-            // Si l'unité de la note est supérieure ou égale à son étoile correspondante
-            if (note >= index + 1) {
-                // Coloration de l'étoile
-                item.style.backgroundColor = '#ff4b23';
-            }
-        });
-    }
 
     // Si la note est un nombre entier
     if (!regex.test(rating)) {
@@ -457,10 +454,26 @@ function ratingSystem(rating) {
         // Coloration des étoiles pleines
         colorStars(integer);
         // Ajout de la classe 'décimal' sur l'étoile qui ne doit pas être remplie entièrement
-        stars[integer].classList.add('decimal');
+        starsRating[integer].classList.add('decimal');
         // Attribution de la largeur à coloriser
         let widthValue = decimal < 10 ? decimal * 10 : decimal;
         // Changement dynamique du remplissage de l'étoile
         root.style.setProperty('--pseudo-width', widthValue + '%');
     }
+}
+
+// Remplissage des étoiles
+function colorStars(note) {
+    starsRating.forEach((star, index) => {
+        // Si l'unité de la note est supérieure ou égale à son étoile correspondante
+        if (note >= index + 1) {
+            // Coloration de l'étoile
+            star.style.backgroundColor = '#ff4b23';
+        }
+    });
+}
+
+// Cache les étoiles si la note n'est pas définie
+function hideRatings() {
+    starsRating.forEach(star => {star.style.display = 'none';});
 }
