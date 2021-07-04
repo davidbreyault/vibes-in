@@ -417,8 +417,8 @@ input {
 .hero__landing .container p {
   margin-top: 2rem;
   color: rgba(224, 233, 235, 0.947);
-  font-size: 1.5rem;
-  font-weight: 200;
+  font-size: 1.6rem;
+  font-weight: 400;
   text-align: center;
   animation: fade-in 3s ease-in-out 0.5s both;
 }

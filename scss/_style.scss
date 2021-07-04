@@ -261,8 +261,8 @@ input {
         p {
             margin-top: 2rem;
             color: rgba(224, 233, 235, 0.947);
-            font-size: 1.5rem;
-            font-weight: 200;
+            font-size: 1.6rem;
+            font-weight: 400;
             text-align: center;
             animation: fade-in 3s ease-in-out 0.5s both;
             @include sm {
@@ -900,7 +900,6 @@ input {
         top: 0;
         padding: 1rem 1.6rem;
         background-color: inherit;
-        //border-bottom: 1px solid $primary-lighter-1;
         box-shadow: 0px 20px 70px rgba(0, 0, 0, .6);
         .close-modal {
             flex-shrink: 0;
