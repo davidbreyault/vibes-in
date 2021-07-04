@@ -24,9 +24,11 @@ function createBokehCircle() {
     }, 6000);
 }
 
-// Création de 3 cercles toutes les 500 millisecondes
+// Création de 2 cercles toutes les 500 millisecondes
 setInterval(() => {
-    for (let i = 0; i < 3; i++) {
+    let multiplicator = window.innerWidth > 992 ? 2 : 1;
+    for (let i = 0; i < multiplicator; i++) {
         createBokehCircle();
     }
 }, 500);
+
