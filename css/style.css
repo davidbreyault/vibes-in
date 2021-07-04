@@ -404,7 +404,7 @@ input {
   border-radius: 50%;
   background-color: #ff4b23;
   mix-blend-mode: difference;
-  animation: fade 6s;
+  animation: fade 6s ease-in-out forwards;
 }
 .hero__landing .container {
   display: flex;
@@ -426,7 +426,7 @@ input {
   margin-top: 2rem;
   padding-bottom: 1.5rem;
   color: rgba(224, 233, 235, 0.947);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 400;
   text-align: center;
   animation: fade-in 3s ease-in-out 0.5s both;

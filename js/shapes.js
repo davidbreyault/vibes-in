@@ -21,7 +21,7 @@ function createBokehCircle() {
     containerDiv.appendChild(circle);
     setTimeout(() => {
         circle.remove();
-    }, 6000);
+    }, 6100);
 }
 
 // Création de 2 cercles toutes les 500 millisecondes
