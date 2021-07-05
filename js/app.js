@@ -475,5 +475,5 @@ function colorStars(note) {
 
 // Cache les étoiles si la note n'est pas définie
 function hideRatings() {
-    starsRating.forEach(star => {star.style.display = 'none';});
+    starsRating.forEach(star => star.style.display = 'none');
 }
